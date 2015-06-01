@@ -1,5 +1,5 @@
 ---
-title: TortoiseSVN doesn't show overlay icons
+title: Making Blu-ray discs playing with Windows Media Center on Windows 7
 author: wasker
 date: 2011-06-17 21:02
 template: article.jade
@@ -11,7 +11,9 @@ Here's two steps that you need to do in order to make everybody play nicely toge
 
 <span class="more"></span>
 
-1. Remove PowerDVD handler for regular DVDs in Windows Media Center:<br />Open regedit as Administrator, go to HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Media Center\AutoPlayHandlers\EventHandlers\PlayDVDMovieOnArrival and remove "CyberLinkPDM" value from the list. The list of values must be empty and only "(Default)" must be present on the top.
-2. Allow Windows Media Center to be registered as Blu-ray player in Autoplay center:<br />Open regedit as Administrator, go to HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\EventHandlers\PlayBluRayOnArrival and add "EHomeDVDDropTarget" value to the list. Then open AutoPlay center and select Windows Media Center under "Blu-ray disc movie" section.
+1. Remove PowerDVD handler for regular DVDs in Windows Media Center:<br />
+open regedit as Administrator and go to HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\<br/>Media&nbsp;Center\AutoPlayHandlers\EventHandlers\PlayDVDMovieOnArrival and remove "CyberLinkPDM" value from the list. The list of values must be empty and only "(Default)" must be present on the top.
+2. Allow Windows Media Center to be registered as Blu-ray player in Autoplay center:<br />
+open regedit as Administrator and go to HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\<br/>Explorer\AutoplayHandlers\EventHandlers\PlayBluRayOnArrival and add "EHomeDVDDropTarget" value to the list. Then open AutoPlay center and select Windows Media Center under "Blu-ray disc movie" section.
 
 Happy watching!

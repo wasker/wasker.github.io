@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width">
-    <title>TortoiseSVN doesn't show overlay icons - 85 MPH
+    <title>Making Blu-ray discs playing with Windows Media Center on Windows 7 - 85 MPH
     </title>
     <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
@@ -13,7 +13,7 @@
   <body class="article-detail">
     <header class="header">
       <div class="content-wrap">
-        <h1>TortoiseSVN doesn't show overlay icons</h1>
+        <h1>Making Blu-ray discs playing with Windows Media Center on Windows 7</h1>
         <p class="author">Written by <span class="author"><a href="mailto:not@for.you">wasker</a></span>
         </p>
       </div>
@@ -25,8 +25,10 @@
 <p>Here’s two steps that you need to do in order to make everybody play nicely&nbsp;together…</p>
 <p><span class="more"></span></p>
 <ol>
-<li>Remove PowerDVD handler for regular DVDs in Windows Media Center:<br />Open regedit as Administrator, go to HKEY_LOCAL_MACHINE\<span class="caps">SOFTWARE</span>\Microsoft\Windows\CurrentVersion\Media Center\AutoPlayHandlers\EventHandlers\PlayDVDMovieOnArrival and remove “CyberLinkPDM” value from the list. The list of values must be empty and only “(Default)” must be present on the&nbsp;top.</li>
-<li>Allow Windows Media Center to be registered as Blu-ray player in Autoplay center:<br />Open regedit as Administrator, go to HKEY_LOCAL_MACHINE\<span class="caps">SOFTWARE</span>\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\EventHandlers\PlayBluRayOnArrival and add “EHomeDVDDropTarget” value to the list. Then open AutoPlay center and select Windows Media Center under “Blu-ray disc movie”&nbsp;section.</li>
+<li>Remove PowerDVD handler for regular DVDs in Windows Media Center:<br />
+open regedit as Administrator and go to HKEY_LOCAL_MACHINE\<span class="caps">SOFTWARE</span>\Microsoft\Windows\CurrentVersion\<br/>Media&nbsp;Center\AutoPlayHandlers\EventHandlers\PlayDVDMovieOnArrival and remove “CyberLinkPDM” value from the list. The list of values must be empty and only “(Default)” must be present on the&nbsp;top.</li>
+<li>Allow Windows Media Center to be registered as Blu-ray player in Autoplay center:<br />
+open regedit as Administrator and go to HKEY_LOCAL_MACHINE\<span class="caps">SOFTWARE</span>\Microsoft\Windows\CurrentVersion\<br/>Explorer\AutoplayHandlers\EventHandlers\PlayBluRayOnArrival and add “EHomeDVDDropTarget” value to the list. Then open AutoPlay center and select Windows Media Center under “Blu-ray disc movie”&nbsp;section.</li>
 </ol>
 <p>Happy&nbsp;watching!</p>
 </section>

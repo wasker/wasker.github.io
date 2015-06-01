@@ -5,11 +5,26 @@
     <atom:link href="http://localhost:8080/feed.xml" rel="self" type="application/rss+xml"></atom:link>
     <link>http://localhost:8080</link>
     <description></description>
-    <pubDate>Fri, 17 Jun 2011 21:02:00 -0700</pubDate>
+    <pubDate>Mon, 01 Jun 2015 14:50:00 -0700</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
     <item>
-      <title>TortoiseSVN doesn't show overlay icons</title>
+      <title>0-to-code</title>
+      <link>http://localhost:8080/articles/2015-06-01-0-to-code/</link>
+      <pubDate>Mon, 01 Jun 2015 14:50:00 -0700</pubDate>
+      <guid isPermaLink="true">http://localhost:8080/articles/2015-06-01-0-to-code/</guid>
+      <author></author>
+      <description>&lt;p&gt;&lt;a href=&quot;https://code.visualstudio.com/&quot;&gt;Visual Studio Code&lt;/a&gt; was a real darling of 2015’s //build. It’s sleek, lightweight and promises great productivity gains.&lt;/p&gt;
+&lt;p&gt;There’s one problem though: it’s a bit hard to get started and requires some number of changes and adjustments to your development process. For starters, your workflows will shift to the command 
+line usage along and NodeJS toolchain is expected to be used very often. Obviously, Visual Studio Code doesn’t come with all that in the box, and you are left exploring the ecosystem, unlike 
+the original Visual Studio Code, when you could develop right away.&lt;/p&gt;
+&lt;p&gt;I spent a bit of time collecting the bare minimum of tools that will help you to get started and created a set of PowerShell scripts that will install all necessary bits on your devbox, including
+Visual Studio Code itself. The script assumes that you don’t have any tools handy, self-contained and respects limited user account limitations, whenever possible.&lt;/p&gt;
+&lt;p&gt;Head over to &lt;a href=&quot;https://github.com/wasker/0-to-code&quot;&gt;this repository&lt;/a&gt; and follow the instructions to get started.&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Making Blu-ray discs playing with Windows Media Center on Windows 7</title>
       <link>http://localhost:8080/articles/2011-06-17-bluray-windows-media-player/</link>
       <pubDate>Fri, 17 Jun 2011 21:02:00 -0700</pubDate>
       <guid isPermaLink="true">http://localhost:8080/articles/2011-06-17-bluray-windows-media-player/</guid>
@@ -18,8 +33,10 @@
 &lt;p&gt;Here’s two steps that you need to do in order to make everybody play nicely together…&lt;/p&gt;
 &lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;Remove PowerDVD handler for regular DVDs in Windows Media Center:&lt;br /&gt;Open regedit as Administrator, go to HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Media Center\AutoPlayHandlers\EventHandlers\PlayDVDMovieOnArrival and remove “CyberLinkPDM” value from the list. The list of values must be empty and only “(Default)” must be present on the top.&lt;/li&gt;
-&lt;li&gt;Allow Windows Media Center to be registered as Blu-ray player in Autoplay center:&lt;br /&gt;Open regedit as Administrator, go to HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\EventHandlers\PlayBluRayOnArrival and add “EHomeDVDDropTarget” value to the list. Then open AutoPlay center and select Windows Media Center under “Blu-ray disc movie” section.&lt;/li&gt;
+&lt;li&gt;Remove PowerDVD handler for regular DVDs in Windows Media Center:&lt;br /&gt;
+open regedit as Administrator and go to HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\&lt;br/&gt;Media&amp;nbsp;Center\AutoPlayHandlers\EventHandlers\PlayDVDMovieOnArrival and remove “CyberLinkPDM” value from the list. The list of values must be empty and only “(Default)” must be present on the top.&lt;/li&gt;
+&lt;li&gt;Allow Windows Media Center to be registered as Blu-ray player in Autoplay center:&lt;br /&gt;
+open regedit as Administrator and go to HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\&lt;br/&gt;Explorer\AutoplayHandlers\EventHandlers\PlayBluRayOnArrival and add “EHomeDVDDropTarget” value to the list. Then open AutoPlay center and select Windows Media Center under “Blu-ray disc movie” section.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Happy watching!&lt;/p&gt;
 </description>
