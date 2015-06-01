@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>85 MPH</title>
+    <atom:link href="http://localhost:8080/feed.xml" rel="self" type="application/rss+xml"></atom:link>
+    <link>http://localhost:8080</link>
+    <description></description>
+    <pubDate>Fri, 17 Jun 2011 21:02:00 -0700</pubDate>
+    <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
+    <language>en</language>
+    <item>
+      <title>TortoiseSVN doesn't show overlay icons</title>
+      <link>http://localhost:8080/articles/2011-06-17-bluray-windows-media-player/</link>
+      <pubDate>Fri, 17 Jun 2011 21:02:00 -0700</pubDate>
+      <guid isPermaLink="true">http://localhost:8080/articles/2011-06-17-bluray-windows-media-player/</guid>
+      <author></author>
+      <description>&lt;p&gt;So, I jumped the shark and bought Samsung SH-B123L drive. Drive comes with CyberLink PowerDVD9 freebie and that’s seems to be the only way to play Blu-ray discs on Windows 7, as there’s no built-in codec yet. The thing is that I fancy Windows Media Center and I really dislike flashy UI of CyberLink. Thankfully, CyberLink provides WMC plug-in which to some extent behaves like original DVD player in WMC, although not without annoyances. One of the major annoyances is that PowerDVD registers itself as regular DVD player as well and Media Center prompts you to choose between regular DVD player and CyberLink DVD player every time you want to play DVD in WMC. Another problem is that even though Blu-ray autoplay section is being created in Control Panel’s AutoPlay Center, there’s no way to select Windows Media Player to handle Blu-rays.&lt;/p&gt;
+&lt;p&gt;Here’s two steps that you need to do in order to make everybody play nicely together…&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Remove PowerDVD handler for regular DVDs in Windows Media Center:&lt;br /&gt;Open regedit as Administrator, go to HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Media Center\AutoPlayHandlers\EventHandlers\PlayDVDMovieOnArrival and remove “CyberLinkPDM” value from the list. The list of values must be empty and only “(Default)” must be present on the top.&lt;/li&gt;
+&lt;li&gt;Allow Windows Media Center to be registered as Blu-ray player in Autoplay center:&lt;br /&gt;Open regedit as Administrator, go to HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\EventHandlers\PlayBluRayOnArrival and add “EHomeDVDDropTarget” value to the list. Then open AutoPlay center and select Windows Media Center under “Blu-ray disc movie” section.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Happy watching!&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>M-Audio Axiom 25 + Ableton Live Lite 8</title>
+      <link>http://localhost:8080/articles/2010-12-02-m-audio-axiom-25-ableton-live-lite-8/</link>
+      <pubDate>Thu, 02 Dec 2010 19:25:00 -0800</pubDate>
+      <guid isPermaLink="true">http://localhost:8080/articles/2010-12-02-m-audio-axiom-25-ableton-live-lite-8/</guid>
+      <author></author>
+      <description>&lt;p&gt;Got lovely Axiom 25 Gen 2 as a holiday gift? Don’t be upset with DirectLink not working: the problem is with Live’s support of DirectLink in version 8, it’s broken - &lt;a href=&quot;http://forum.ableton.com/viewtopic.php?f=1&amp;amp;t=153512&quot;&gt;Ableton’s Live 8.2.2 beta fixes it&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;And you &lt;strong&gt;have to&lt;/strong&gt; install M-Audio’s drivers 1.1.2+ - the ones that come with Windows do not support DirectLink.&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Cannot open precompiled header file</title>
+      <link>http://localhost:8080/articles/2010-07-28-precompiled-header-problem/</link>
+      <pubDate>Wed, 28 Jul 2010 20:25:00 -0700</pubDate>
+      <guid isPermaLink="true">http://localhost:8080/articles/2010-07-28-precompiled-header-problem/</guid>
+      <author></author>
+      <description>&lt;p&gt;Another pet peeve of mine.&lt;/p&gt;
+&lt;p&gt;The internet is full of ideas of either turn off precompiled headers altogether, or set the switch to “Create precompiled header” project-wide. Wrong, wrong, wrong.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://stackoverflow.com/questions/1397190/visual-c-precompiled-headers-errors/1397219#1397219&quot;&gt;Here’s the right solution&lt;/a&gt;…&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Right-click your project and select “Use precompiled header” option, set precompiled header file name.&lt;/li&gt;
+&lt;li&gt;Select one of your CPP files (usually stdafx.cpp, but may be anything you want, really) as a precompiled header file generator. Include header you want to precompile to this file (say, stdafx.h).&lt;/li&gt;
+&lt;li&gt;Right-click CPP file you selected on step 2 and select “Create precompiled header” option on this file.&lt;/li&gt;
+&lt;li&gt;Make sure that every CPP file in the project includes precompiled header in the very beginning.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;After performing these operations your project will compile as expected.&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>VWD Express 2008's or VS 2008's HTML source/design view freezes after upgrade to Office 2010</title>
+      <link>http://localhost:8080/articles/2010-02-21-vs2008-office2010-problem/</link>
+      <pubDate>Sun, 21 Feb 2010 19:15:00 -0800</pubDate>
+      <guid isPermaLink="true">http://localhost:8080/articles/2010-02-21-vs2008-office2010-problem/</guid>
+      <author></author>
+      <description>&lt;p&gt;Visual Web Developer Express 2008’s or Visual Studio 2008’s HTML source/design view freezes after you upgraded to Office 2010 Beta from Office 2007 with symptoms: whenever you open source or design view for HTML page or do any step-by-step debugging within the view, the IDE eventually freezes beeping every time you click your mouse in the window.&lt;/p&gt;
+&lt;p&gt;Here’s how to fix it…&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Uninstall VWD Express, if present.&lt;/li&gt;
+&lt;li&gt;Uninstall Microsoft Visual Web Authoring Component, which is more likely has Office 2007 icon in Programs and Features view.&lt;/li&gt;
+&lt;li&gt;Install VWD Express back again or re-install SP1 for Visual Studio 2008.&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    <item>
+      <title>TortoiseSVN doesn't show overlay icons</title>
+      <link>http://localhost:8080/articles/2009-11-24-tortoisesvn-doesnt-show-overlay-icons/</link>
+      <pubDate>Tue, 24 Nov 2009 18:52:00 -0800</pubDate>
+      <guid isPermaLink="true">http://localhost:8080/articles/2009-11-24-tortoisesvn-doesnt-show-overlay-icons/</guid>
+      <author></author>
+      <description>&lt;p&gt;Lot’s of reasons to have overlay icons of TortoiseSVN to be broken, but the easiest one to check is whether the Microsoft Groove (or Sharepoint Workspace) was installed recently. You see, this guy adds a bunch of its own overlays and thus breaks TSVN’s.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Open regedit and navigate to HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ShellIconOverlayIdentifiers key. Do you have more than 15 records down there (if you have both Groove and TSVN installed, then yes)? That’s the problem. Delete Groove’s overlays and have TortoiseSVN up and running again.&lt;/p&gt;
+</description>
+    </item>
+  </channel>
+</rss>

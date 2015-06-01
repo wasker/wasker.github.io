@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>TortoiseSVN doesn't show overlay icons - 85 MPH
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>TortoiseSVN doesn't show overlay icons</h1>
+        <p class="author">Written by <span class="author"><a href="mailto:not@for.you">wasker</a></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>Lot’s of reasons to have overlay icons of TortoiseSVN to be broken, but the easiest one to check is whether the Microsoft Groove (or Sharepoint Workspace) was installed recently. You see, this guy adds a bunch of its own overlays and thus breaks&nbsp;<span class="caps">TSVN</span>’s.</p>
+<p><span class="more"></span></p>
+<p>Open regedit and navigate to HKEY_LOCAL_MACHINE\<span class="caps">SOFTWARE</span>\Microsoft\Windows\CurrentVersion\Explorer\ShellIconOverlayIdentifiers key. Do you have more than 15 records down there (if you have both Groove and TSVN installed, then yes)? That’s the problem. Delete Groove’s overlays and have TortoiseSVN up and running&nbsp;again.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="copy">
+          <p>&copy; 2015 wasker &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>
