@@ -5,9 +5,1828 @@
     <atom:link href="http://localhost:8080/feed.xml" rel="self" type="application/rss+xml"></atom:link>
     <link>http://localhost:8080</link>
     <description></description>
-    <pubDate>Mon, 01 Jun 2015 14:50:00 -0700</pubDate>
+    <pubDate>Thu, 20  Aug 2015 10:00:00 -0700</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
+    <item>
+      <title>Building AngularJS application with TypeScript and Visual Studio Code</title>
+      <link>http://localhost:8080/articles/2015-08-20-angularjs-typescript-visual-studio-code/</link>
+      <pubDate>Thu, 20  Aug 2015 10:00:00 -0700</pubDate>
+      <guid isPermaLink="true">http://localhost:8080/articles/2015-08-20-angularjs-typescript-visual-studio-code/</guid>
+      <author></author>
+      <description>&lt;p&gt;The purpose of this article is to&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Provide a working guidance on building AngularJS applications using TypeScript and powered by ASP.NET vNext backend.&lt;/li&gt;
+&lt;li&gt;Experiment with building web applications using facilities provided by and mindset required by &lt;a href=&quot;https://code.visualstudio.com/&quot;&gt;Visual Studio Code&lt;/a&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&quot;as-seen-on-codeproject&quot;&gt;As seen on CodeProject&lt;/h2&gt;
+&lt;p&gt;This &lt;a href=&quot;http://www.codeproject.com/Articles/1019920/Building-AngularJS-application-with-TypeScript-and&quot;&gt;article was published on CodeProject&lt;/a&gt; before appearing on this blog.&lt;/p&gt;
+&lt;h2 id=&quot;what-are-we-building-&quot;&gt;What are we building?&lt;/h2&gt;
+&lt;p&gt;In order to showcase a few things possible with AngularJS and how these things translate into TypeScript, we’ll be building a simple, yet not too simple application for managing widgets.
+Our application will showcase a list of widgets and users will be able to add, edit and delete widgets, all that possible while staying on the same page. The application is pretty simple,
+yet it has enough features to show many parts on AngularJS in one app, working together, instead of focusing only one thing like most tutorials do.&lt;/p&gt;
+&lt;p&gt;At the same time we’ll be building all that in Visual Studio Code and we’ll touch a lot of tooling questions and issues around it. &lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/2015-08-20-angularjs-typescript-visual-studio-code/mockup.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;h2 id=&quot;development-environment-configuration&quot;&gt;Development environment configuration&lt;/h2&gt;
+&lt;p&gt;Coming from fully featured Visual Studio IDE, it’s very easy to get lost in all the multiple ways you can approach your development environment configuration. There’s no installer package
+that will allow you to select a bunch of options and then watch a progress bar going through the installation progress. Each part of your toolchain is coming from a different source,
+has its own way of configuration, running, etc. This configuration needs to be done only once and you will be able to use it over and over again for other projects.&lt;/p&gt;
+&lt;p&gt;Tools that we need:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https://nodejs.org/&quot;&gt;NodeJS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;NPM and following modules installed globally:&lt;ul&gt;
+&lt;li&gt;bower&lt;/li&gt;
+&lt;li&gt;gulp&lt;/li&gt;
+&lt;li&gt;gulp-watch&lt;/li&gt;
+&lt;li&gt;gulp-cli&lt;/li&gt;
+&lt;li&gt;gulp-typescript&lt;/li&gt;
+&lt;li&gt;yo&lt;/li&gt;
+&lt;li&gt;generator-aspnet&lt;/li&gt;
+&lt;li&gt;typescript&lt;/li&gt;
+&lt;li&gt;tsd&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/aspnet/dnx&quot;&gt;DNX&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://code.visualstudio.com/&quot;&gt;Visual Studio Code&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;You may download/install them manually, or — as I prefer it — use &lt;a href=&quot;https://github.com/wasker/0-to-code&quot;&gt;0-to-code installer&lt;/a&gt; that installs these and a better console and git, thus giving you 
+pretty much all you need when you’re developing with Visual Studio Code. In addition to installing all the tools, this installer will configure your user environment properly, putting
+all commands that you need in proper places.&lt;/p&gt;
+&lt;p&gt;If you are not familiar with package management aside from NuGet, you may find article 
+&lt;a href=&quot;http://codylindley.com/techpro/2013_04_12__package-managers-an-introducto/&quot;&gt;“Package Managers: An Introductory Guide for the Uninitiated Front-End Developer”&lt;/a&gt; educational.&lt;/p&gt;
+&lt;h2 id=&quot;minimal-asp-net-application&quot;&gt;Minimal ASP.NET application&lt;/h2&gt;
+&lt;p&gt;In regular Visual Studio the process of creating a new project was as easy as selecting File -&amp;gt; New command in the menu. After initial development environment configuration, you’ll be
+able to do that pretty much as easy as that, except using the command line.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;yo aspnet --gulp
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The command above will prompt you for a type of application (choose “Web Application Basic”) and the location of said application. After completing the prompt, you’ll be presented with the 
+cookie-cutter ASP.NET vNext application. Since &lt;code&gt;--gulp&lt;/code&gt; argument was specified, our project will be using &lt;a href=&quot;https://github.com/gulpjs/gulp/blob/master/docs/README.md#articles&quot;&gt;Gulp&lt;/a&gt; as a build system. &lt;/p&gt;
+&lt;p&gt;Your next steps:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;dnu restore &amp;amp; bower install &amp;amp; npm install
+
+dnu build
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now, if you type &lt;code&gt;code .&lt;/code&gt; in your command prompt, you should be able to edit your code with Visual Studio. In order to run your application, press Ctrl-Shift-P and type &lt;code&gt;dnx web&lt;/code&gt;. This
+will start a local web server and you’ll be able to navigate to &lt;a href=&quot;http://localhost:5000&quot;&gt;http://localhost:5000&lt;/a&gt; and use your application.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/4d21752703a44e84e723e34e29bceb15d39dda1a&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;add-angularjs-to-application&quot;&gt;Add AngularJS to application&lt;/h3&gt;
+&lt;p&gt;When web application is developed in a Visual Studio IDE, all details of how it is served when you run it via F5, are hidden from you by the IDE. Usually you start dealing
+with all these questions when you are ready to deploy. When you develop with Visual Studio Code, the acquisition and deployment of assets questions are posed right from the
+beginning of the project. In order to get started with AngularJS we’ll need to specify where to get it, and, more importantly, where to put it.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Edit &lt;code&gt;bower.json&lt;/code&gt; and add:&lt;ul&gt;
+&lt;li&gt;“angular”: “1.4.0”&lt;/li&gt;
+&lt;li&gt;“angular-ui-router”: “0.2.15”&lt;/li&gt;
+&lt;li&gt;“angular-bootstrap”: “0.13.0”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Run &lt;code&gt;bower install&lt;/code&gt; command and observe that it downloads three packages you’ve just added to &lt;code&gt;bower.json&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Include Angular code in your page by adding links to the Angular scripts in &lt;code&gt;Views\Shared\_Layout.cshtml&lt;/code&gt;:&lt;pre&gt;&lt;code&gt;&amp;lt;script src=&amp;quot;~/lib/angular/angular.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+&amp;lt;script src=&amp;quot;~/lib/angular-ui-router/release/angular-ui-router.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+&amp;lt;script src=&amp;quot;~/lib/angular-bootstrap/ui-bootstrap-tpls.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;Start your application and observe that Angular code is being downloaded to client.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/1d644028da4a33a385ea433896059ad61e408544&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;add-typescript-support-to-application&quot;&gt;Add TypeScript support to application&lt;/h3&gt;
+&lt;p&gt;We will be using exclusively TypeScript for further application development. Following steps will configure our build pipeline to compile all our TypeScript code to one
+output JavaScript file, using type definition files for external libraries like jQuery and Angular. The build pipeline will also generate sourcemap files to make our 
+debugging easier.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Create folder &lt;code&gt;scripts&lt;/code&gt;. This will be an input folder for our TypeScript compilation task.&lt;/li&gt;
+&lt;li&gt;Edit &lt;code&gt;package.json&lt;/code&gt; and add:&lt;ul&gt;
+&lt;li&gt;“gulp-typescript”: “2.8.0”&lt;/li&gt;
+&lt;li&gt;“gulp-sourcemaps”: “1.5.2”&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Run &lt;code&gt;npm install&lt;/code&gt; and observe that newly added packages are downloaded locally.&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Edit &lt;code&gt;gulpfile.js&lt;/code&gt;:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;At the start of the file add:&lt;ul&gt;
+&lt;li&gt;tsc = require(“gulp-typescript”)&lt;/li&gt;
+&lt;li&gt;sourcemaps = require(“gulp-sourcemaps”)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Find the “paths” structure definition and add following folders there:&lt;ul&gt;
+&lt;li&gt;appScripts: “./scripts/“&lt;/li&gt;
+&lt;li&gt;typings: “./typings/“&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Under the “paths” structure make following changes&lt;pre&gt;&lt;code&gt;paths.appOut = paths.webroot + &amp;quot;js/&amp;quot;;
+paths.appSources = paths.appScripts + &amp;quot;**/*.ts&amp;quot;;
+paths.js = paths.appOut + &amp;quot;**/*.js&amp;quot;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Create new task “compile-app”:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;gulp.task(&amp;quot;compile-app&amp;quot;, function () {
+var tscResult = gulp.src([paths.appSources, paths.typings + &amp;quot;**/*.d.ts&amp;quot;])
+                  .pipe(sourcemaps.init())
+                  .pipe(tsc({
+                    target: &amp;quot;ES5&amp;quot;,
+                    removeComments: true,
+                    noImplicitAny: true,
+                    noEmitOnError: true,
+                    noExternalResolve: true,
+                    out: &amp;quot;app.js&amp;quot;
+                  }));  
+
+return tscResult.js
+        .pipe(sourcemaps.write(&amp;quot;maps/&amp;quot;))                  //  Relative to paths.js.
+        .pipe(gulp.dest(paths.js));
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;Create &lt;code&gt;scripts\app.ts&lt;/code&gt;:&lt;pre&gt;&lt;code&gt;let hello = &amp;quot;world&amp;quot;;
+alert(hello);
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;Include link to &lt;code&gt;app.js&lt;/code&gt; in &lt;code&gt;Views\Home\Index.cshtml&lt;/code&gt;:&lt;pre&gt;&lt;code&gt;@section scripts 
+{
+&amp;lt;script src=&amp;quot;~/js/app.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;In order to prevent VSCode from interpreting TypeScript files and generated JavaScript files together, create &lt;code&gt;jsconfig.json&lt;/code&gt; 
+in the root folder of the project.&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;exclude&amp;quot;: [
+      &amp;quot;wwwroot&amp;quot;
+      , &amp;quot;node_modules&amp;quot;
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;After you did that, you should be able to successfully execute &lt;code&gt;gulp compile-app&lt;/code&gt; from the command prompt and then run the application.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/265092dc9441bd6dde45177912da8796c948d2d0&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;implement-barebones-angularjs-application&quot;&gt;Implement barebones AngularJS application&lt;/h3&gt;
+&lt;p&gt;Now that we have all building blocks in place, we can easily implement a barebones AngularJS application that does nothing.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Under the &lt;code&gt;scripts&lt;/code&gt; folder create &lt;code&gt;controllers&lt;/code&gt;, &lt;code&gt;directives&lt;/code&gt;, &lt;code&gt;services&lt;/code&gt; and &lt;code&gt;templates&lt;/code&gt; folders. Our application’s implementation will be spread around these folders.&lt;/li&gt;
+&lt;li&gt;From the command line run &lt;code&gt;tsd install jquery angular angular-ui-bootstrap angular-ui-router&lt;/code&gt;. This will install TypeScript type definitions for jQuery and Angular.&lt;/li&gt;
+&lt;li&gt;Edit &lt;code&gt;gulpfile.js&lt;/code&gt;:&lt;ol&gt;
+&lt;li&gt;Find the “paths” structure definition and add following folders there:&lt;ul&gt;
+&lt;li&gt;templates: “./scripts/templates/“&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Under the “paths” structure define a new variable&lt;pre&gt;&lt;code&gt;paths.templatesOut = paths.webroot + &amp;quot;templates/&amp;quot;
+paths.templateFiles = paths.templates + &amp;quot;**/*.html&amp;quot;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;Create new task “copy-templates”:&lt;pre&gt;&lt;code&gt; gulp.task(&amp;quot;copy-templates&amp;quot;, function () {
+   gulp.src(paths.templateFiles)
+     .pipe(gulp.dest(paths.templatesOut));
+ });
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;Create &lt;code&gt;scripts\appTypes.d.ts&lt;/code&gt; (see below).&lt;/li&gt;
+&lt;li&gt;Create &lt;code&gt;scripts\app.ts&lt;/code&gt; (see below).&lt;/li&gt;
+&lt;li&gt;Create &lt;code&gt;scripts\Templates\index.html&lt;/code&gt; that has some placeholder text.&lt;/li&gt;
+&lt;li&gt;Find &lt;code&gt;body-content&lt;/code&gt; container in &lt;code&gt;Views\Shared\_Layout.cshtml&lt;/code&gt; and add our app declaration as shown below:&lt;pre&gt;&lt;code&gt; &amp;lt;div class=&amp;quot;container body-content&amp;quot; ng-app=&amp;quot;widgetRegistryApp&amp;quot;&amp;gt;
+     @RenderBody()
+ &amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;Modify &lt;code&gt;Views\Home\Index.cshtml&lt;/code&gt; to bootstrap the application (see below).&lt;/li&gt;
+&lt;li&gt;Run &lt;code&gt;gulp compile-app&lt;/code&gt; to compile the application, then &lt;code&gt;gulp copy-templates&lt;/code&gt; to copy templates from their original location to the output folder under wwwroot.&lt;/li&gt;
+&lt;li&gt;You should be able to start your application and see the placeholder text displayed on the webpage.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&quot;application-types&quot;&gt;Application types&lt;/h4&gt;
+&lt;p&gt;To keep things simple, we’ll keep all type definitions related to our application in one file. All our modules will have to reference only this file and maybe some
+other modules that are specific only for the module in question.&lt;/p&gt;
+&lt;p&gt;Create &lt;code&gt;scripts\appTypes.d.ts&lt;/code&gt; with the contents below.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/// &amp;lt;reference path=&amp;quot;../typings/angularjs/angular.d.ts&amp;quot; /&amp;gt;
+/// &amp;lt;reference path=&amp;quot;../typings/angular-ui-bootstrap/angular-ui-bootstrap.d.ts&amp;quot; /&amp;gt;
+
+declare namespace WidgetRegistry {
+    /** Application module name. */
+    var appModuleName: string;
+
+    /** Application configuration. */    
+    interface AppConfig {
+        /** API endpoint. */
+        apiEndpoint: string;
+
+        /** Directory that contains templates. */        
+        templateRoot: string;
+    }
+}
+
+declare module angular {
+    interface IScope {
+        /**
+         * Constructs full path to template.
+         * @param fileName Template file name without path.
+         */
+        pathToTemplate: (fileName: string) =&amp;gt; string;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Our type definitions include general Angular type definitions and declare our application’s module name and configuration interface. We also add our utility method 
+on Angular’s scope definition.&lt;/p&gt;
+&lt;h4 id=&quot;application-module&quot;&gt;Application module&lt;/h4&gt;
+&lt;p&gt;Application module defines and configures our application. Things like routing configuration are happening there.&lt;/p&gt;
+&lt;p&gt;Modify &lt;code&gt;scripts\app.ts&lt;/code&gt; as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/// &amp;lt;reference path=&amp;quot;appTypes.d.ts&amp;quot; /&amp;gt;
+/// &amp;lt;reference path=&amp;quot;../typings/angular-ui-router/angular-ui-router.d.ts&amp;quot; /&amp;gt;
+
+namespace WidgetRegistry {
+
+    //    Configure application module name.    
+    appModuleName = &amp;quot;widgetRegistryApp&amp;quot;;
+
+    //    Create application module.    
+    var app = angular.module(appModuleName, [&amp;quot;widgetRegistryData&amp;quot;, &amp;quot;ui.router&amp;quot;, &amp;quot;ui.bootstrap&amp;quot;]);
+
+    //    Configure application module.    
+    app.config([&amp;quot;appConfig&amp;quot;, &amp;quot;$stateProvider&amp;quot;, &amp;quot;$urlRouterProvider&amp;quot;, function (appConfig: AppConfig, $stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) {
+        $stateProvider
+            .state(&amp;quot;root&amp;quot;, {
+                url: &amp;quot;/&amp;quot;,
+                templateUrl: getPathToTemplate(appConfig, &amp;quot;index.html&amp;quot;)
+            });
+
+        $urlRouterProvider.otherwise(&amp;quot;/&amp;quot;);
+    }]);
+
+    //    Initialize application module.    
+    app.run([&amp;quot;appConfig&amp;quot;, &amp;quot;$rootScope&amp;quot;, function(appConfig: AppConfig, $rootScope: ng.IRootScopeService) {
+        //    Expose global functions on root scope.
+        (&amp;lt;ng.IScope&amp;gt;$rootScope).pathToTemplate = (fileName: string) =&amp;gt; getPathToTemplate(appConfig, fileName);
+    }]);
+
+    /**
+     * Constructs full path to template.
+     * @param appConfig Application configuration. 
+     * @param fileName Template file name without path.
+     */    
+    function getPathToTemplate(appConfig: AppConfig, fileName: string): string {
+        return appConfig.templateRoot + fileName;
+    }
+
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Note that our application explicitly refers to Angular UI router’s type definitions. This is because UI router is not used anywhere else and it’s not useful
+to have its definitions visible in other places.&lt;/p&gt;
+&lt;p&gt;The application configures its global module name, declares dependencies to our data module (below) and configures routing to show our dummy template.&lt;/p&gt;
+&lt;h4 id=&quot;bootstrap-application-module-on-the-webpage&quot;&gt;Bootstrap application module on the webpage&lt;/h4&gt;
+&lt;p&gt;One final step is to actually bootstrap our application. Modify &lt;code&gt;Views\Home\Index.cshtml&lt;/code&gt; as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;@{
+    ViewBag.Title = &amp;quot;Home Page&amp;quot;;
+}
+
+@section scripts
+{
+
+&amp;lt;script type=&amp;quot;text/javascript&amp;quot;&amp;gt;
+
+    var appData = angular.module(&amp;quot;widgetRegistryData&amp;quot;, []);
+
+    var appConfig = {
+        apiEndpoint: &amp;quot;/api/widgets/&amp;quot;,
+        templateRoot: &amp;quot;/templates/&amp;quot;
+    };
+    appData.constant(&amp;quot;appConfig&amp;quot;, appConfig);
+
+&amp;lt;/script&amp;gt;
+
+&amp;lt;script src=&amp;quot;~/app/app.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+
+}
+
+&amp;lt;div ui-view&amp;gt;&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;All this view does is it declares our data module that contains actual application configuration (you might want to pass current values from the model instead
+of hardcoding them), refers to an application script bundle and declares where the application view will be located.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/266c7109efe30db750cdfbd6009e1558849bc0e1&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;building-blocks&quot;&gt;Building blocks&lt;/h2&gt;
+&lt;p&gt;Before we move on to implementation, let’s take a high-level look at which blocks our toy application consists of. &lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/2015-08-20-angularjs-typescript-visual-studio-code/diagram.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;The main view of our application lists all widgets, allows user to modify widgets on the list and add new widgets. This functionality will be orchestrated by
+the &lt;code&gt;widgetManagerController.ts&lt;/code&gt; controller that will power &lt;code&gt;index.html&lt;/code&gt; template.&lt;/p&gt;
+&lt;p&gt;As you can see from the diagram, each line item on the list not just displays the information about the widget, but also allows editing or deleting a widget. It
+makes more sense to extract all that functionality into a separate class, which we’ll do by introducing &lt;code&gt;widgetLineItem.html&lt;/code&gt; template backed by 
+the &lt;code&gt;widgetLineItemDirective.ts&lt;/code&gt; directive.&lt;/p&gt;
+&lt;p&gt;Finally, whenever the user clicks Add button or Edit link on the widget line item, an editor opens. This functionality is implemented in the &lt;code&gt;widgetEditorController.ts&lt;/code&gt;
+controller and exposed to user via the &lt;code&gt;widgetEditor.html&lt;/code&gt; template.&lt;/p&gt;
+&lt;p&gt;We will provide communication with the backend via the &lt;code&gt;widgetService.ts&lt;/code&gt; service.&lt;/p&gt;
+&lt;h2 id=&quot;implementation-details&quot;&gt;Implementation details&lt;/h2&gt;
+&lt;h3 id=&quot;widget-types&quot;&gt;Widget types&lt;/h3&gt;
+&lt;p&gt;All our functionality will be speaking in terms of “widgets”. Since we’re working in TypeScript universe, let’s describe widget types.&lt;/p&gt;
+&lt;p&gt;First, create &lt;code&gt;scripts\widgetState.ts&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;namespace WidgetRegistry {
+
+    /** States of the widget. */    
+    export enum WidgetState {
+        existing = 0,
+        new = 1,
+        deleting = 2,
+        deleted = 3,
+        undeleting = 4
+    }
+
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then modify &lt;code&gt;scripts\appTypes.d.ts&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/// &amp;lt;reference path=&amp;quot;widgetState.ts&amp;quot; /&amp;gt;
+
+/** Widget data. */    
+interface Widget {
+    /** Widget ID. */
+    id: string;
+
+    /** Widget name. */        
+    name: string;
+
+    /** Some amount. */        
+    amount: number;
+
+    /** Widget description. */        
+    description?: string;
+
+    /** Private state of widget. */        
+    $state?: WidgetState;
+}
+
+type WidgetList = Array&amp;lt;Widget&amp;gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The types are self-explanatory. &lt;code&gt;WidgetState&lt;/code&gt; is a way for us to keep track of the widget state on client. The &lt;code&gt;$state&lt;/code&gt; member will never be taken to account by 
+the server side. &lt;/p&gt;
+&lt;h3 id=&quot;service-stub&quot;&gt;Service stub&lt;/h3&gt;
+&lt;p&gt;Pretty much all our functionality will be calling the backend to perform some kind of operation on the widget. AngularJS provides AJAX functionality via &lt;code&gt;$http&lt;/code&gt; service.
+You may choose to make all controllers to be dependent on this service and perform HTTP operations, that correspond to backend calls, directly, however, the more elegant way 
+would be to define our own service that exposes backend functionality in terms that make sense for our application problem domain. This way you may change the actual service 
+implementation later on, or mock specific service operations instead of handling generic GET/POST/etc. verbs in unit tests.&lt;/p&gt;
+&lt;p&gt;First off, let’s define the service interface (&lt;code&gt;appTypes.d.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/** Backend service operations. */    
+interface IWidgetService {
+    /** Gets list of widgets. */
+    getWidgets(): ng.IPromise&amp;lt;WidgetList&amp;gt;;
+
+    /**
+     * Creates new widget.
+     * @param widget Widget to be created.
+     */        
+    createWidget(widget: Widget): ng.IPromise&amp;lt;any&amp;gt;;
+
+    /**
+     * Updates an existing widget.
+     * @param widget Widget to be updated.
+     */        
+    updateWidget(widget: Widget): ng.IPromise&amp;lt;any&amp;gt;;
+
+    /**
+     * Deletes an existing widget.
+     * @param widget Widget to be deleted.
+     */        
+    deleteWidget(widget: Widget): ng.IPromise&amp;lt;any&amp;gt;;
+
+    /**
+     * Restores a widget that was deleted earlier.
+     * @param widget Widget to be restored.
+     */        
+    undoWidgetDelete(widget: Widget): ng.IPromise&amp;lt;any&amp;gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;At this stage of our app development, it’s too early to provide an actual implementation of the service, so let’s fake it by using Angular’s &lt;code&gt;$q&lt;/code&gt; service 
+in &lt;code&gt;scripts\services\widgetService.ts&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/// &amp;lt;reference path=&amp;quot;../appTypes.d.ts&amp;quot; /&amp;gt;
+
+namespace WidgetRegistry {
+
+    /** Backend service communications. */    
+    export class WidgetService implements IWidgetService {
+        //    Dependencies.
+        public static $inject = [&amp;quot;appConfig&amp;quot;, &amp;quot;$q&amp;quot;];
+
+        constructor(
+            private appConfig: AppConfig,
+            private promise: ng.IQService) {
+        }
+
+        /** Part of IWidgetService. */        
+        public getWidgets = (): ng.IPromise&amp;lt;WidgetList&amp;gt; =&amp;gt; {
+            var operation = this.promise.defer();
+            operation.resolve([{
+                id: &amp;quot;widget_1&amp;quot;,
+                name: &amp;quot;Some widget&amp;quot;,
+                amount: 100,
+                description: &amp;quot;This is the best widget ever&amp;quot;
+            }]);
+
+            return operation.promise;
+        }
+
+        /** Part of IWidgetService. */        
+        public createWidget = (widget: Widget): ng.IPromise&amp;lt;any&amp;gt; =&amp;gt; {
+            var operation = this.promise.defer();
+            operation.resolve();
+
+            return operation.promise;
+        }
+
+        /** Part of IWidgetService. */        
+        public updateWidget = (widget: Widget): ng.IPromise&amp;lt;any&amp;gt; =&amp;gt; {
+            var operation = this.promise.defer();
+            operation.resolve();
+
+            return operation.promise;
+        }
+
+        /** Part of IWidgetService. */        
+        public deleteWidget = (widget: Widget): ng.IPromise&amp;lt;any&amp;gt; =&amp;gt; {
+            var operation = this.promise.defer();
+            operation.resolve();
+
+            return operation.promise;
+        }
+
+        /** Part of IWidgetService. */        
+        public undoWidgetDelete = (widget: Widget): ng.IPromise&amp;lt;any&amp;gt; =&amp;gt; {
+            var operation = this.promise.defer();
+            operation.resolve();
+
+            return operation.promise;
+        }
+    }
+
+    //    Register with application module.    
+    angular.module(appModuleName).service(&amp;quot;widgetService&amp;quot;, WidgetService);
+
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Later, once we’re ready, we’ll replace stubs with actual calls to the backend. &lt;/p&gt;
+&lt;h3 id=&quot;widget-manager-controller&quot;&gt;Widget manager controller&lt;/h3&gt;
+&lt;p&gt;Controllers in Angular power actual functionality exposed to users through templates. Each controller has its scope. Different people approach controller 
+scopes differently. I prefer to split scope members into the model and operations, and make controllers expose both explicitly, as opposed to treating the 
+controller itself as a view-model and accessing it directly from the view. Here’s how I define the widget manager controller (&lt;code&gt;appTypes.d.ts&lt;/code&gt;).&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;type EventCallback = (e?: ng.IAngularEvent) =&amp;gt; void;
+
+/** Scope of the widget manager. */    
+interface WidgetManagerScope extends ng.IScope {
+    /** Widget manager model. */
+    model: {
+        /** List of widgets. */
+        widgets: WidgetList;
+
+        /** Indicates whether the operation is in progress. */        
+        operationInProgress: boolean;
+
+        /** If operation results in an error, contains a message. */
+        errorMessage?: string;            
+    }
+
+    /** Initiates operation of adding a new widget. */        
+    addWidget: EventCallback;        
+
+    /** 
+     * Edits widget.
+     * @param widget Widget to be edited.
+     */        
+    editWidget(widget: Widget): void;
+
+    /** 
+     * Deletes widget.
+     * @param widget Widget to be deleted.
+     */        
+    deleteWidget(widget: Widget): void;
+
+    /** 
+     * Restores widget that was deleted.
+     * @param widget Widget to be restored.
+     */        
+    undeleteWidget(widget: Widget): void;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The implementation of the controller will live in &lt;code&gt;scripts\controllers\widgetManagerController.ts&lt;/code&gt; and look like this.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/// &amp;lt;reference path=&amp;quot;../appTypes.d.ts&amp;quot; /&amp;gt;
+
+namespace WidgetRegistry {
+
+    /** Widget manager controller. */    
+    export class WidgetManagerController {
+        /** Dependencies. */
+        public static $inject = [&amp;quot;appConfig&amp;quot;, &amp;quot;$scope&amp;quot;, &amp;quot;widgetService&amp;quot;];
+
+        constructor(
+            private appConfig: AppConfig,
+            private $scope: WidgetManagerScope,
+            private widgetService: IWidgetService) {
+
+            $scope.model = {
+                widgets: [],
+                operationInProgress: false
+            };
+            $scope.addWidget = this.addWidget;
+            $scope.editWidget = this.editWidget;
+            $scope.deleteWidget = this.deleteWidget;
+            $scope.undeleteWidget = this.undeleteWidget;
+
+            this.performOperation(this.widgetService.getWidgets()
+                .then((widgets: WidgetList) =&amp;gt; this.$scope.model.widgets = widgets)
+                .catch(() =&amp;gt; this.$scope.model.errorMessage = &amp;quot;Cannot get list of widgets. Please try again later.&amp;quot;));
+        }
+
+        /** Wraps an operation with operationInProgress indicator. */        
+        private performOperation = (operationPromise: ng.IPromise&amp;lt;any&amp;gt;): void =&amp;gt; {
+            this.$scope.model.operationInProgress = true;
+            this.$scope.model.errorMessage = &amp;quot;&amp;quot;;
+
+            operationPromise.finally(() =&amp;gt; this.$scope.model.operationInProgress = false);
+        }
+
+        /** Part of WidgetManagerScope. */        
+        private addWidget = (): void =&amp;gt; {
+        }
+
+        /** Part of WidgetManagerScope. */        
+        private editWidget = (widget: Widget): void =&amp;gt; {
+        }
+
+        /** Part of WidgetManagerScope. */        
+        private deleteWidget = (widget: Widget): void =&amp;gt; {
+        }
+
+        /** Part of WidgetManagerScope. */        
+        private undeleteWidget = (widget: Widget): void =&amp;gt; {
+        }
+    }
+
+    //    Register with application module.    
+    angular.module(appModuleName).controller(&amp;quot;widgetManagerController&amp;quot;, WidgetManagerController);
+
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The constructor of our controller initializes the scope with an empty model, exposes widget operations that user will invoke by clicking the elements
+of our user interface, and schedules an operation to retrieve the list of widgets from the backend. Since our service implementation is stubbed, it 
+will return immediately, but due to us stubbing it through the &lt;code&gt;$q&lt;/code&gt; service, the controller logic that receives the list of widgets will not change
+later, when we move on to a proper implementation. &lt;/p&gt;
+&lt;p&gt;Now we can replace our dummy &lt;code&gt;index.html&lt;/code&gt; template with markup like shown below.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;div class=&amp;quot;alert alert-danger&amp;quot; ng-if=&amp;quot;model.errorMessage&amp;quot;&amp;gt;
+    {{model.errorMessage}}
+&amp;lt;/div&amp;gt;
+
+&amp;lt;div class=&amp;quot;table-responsive&amp;quot;&amp;gt;
+
+    &amp;lt;table class=&amp;quot;table table-striped&amp;quot;&amp;gt;
+
+      &amp;lt;thead&amp;gt;
+        &amp;lt;tr&amp;gt;
+          &amp;lt;th&amp;gt;ID&amp;lt;/th&amp;gt;
+          &amp;lt;th&amp;gt;Name&amp;lt;/th&amp;gt;
+          &amp;lt;th&amp;gt;Amount&amp;lt;/th&amp;gt;
+          &amp;lt;th&amp;gt;Description&amp;lt;/th&amp;gt;
+          &amp;lt;th&amp;gt;&amp;amp;nbsp;&amp;lt;/th&amp;gt;
+        &amp;lt;/tr&amp;gt;
+      &amp;lt;/thead&amp;gt;
+
+      &amp;lt;tbody&amp;gt;
+        &amp;lt;tr ng-repeat=&amp;quot;widget in model.widgets&amp;quot;&amp;gt;
+            &amp;lt;td&amp;gt;{{widget.id}}&amp;lt;/td&amp;gt;
+            &amp;lt;td&amp;gt;{{widget.name}}&amp;lt;/td&amp;gt;
+            &amp;lt;td&amp;gt;{{widget.amount}}&amp;lt;/td&amp;gt;
+            &amp;lt;td&amp;gt;{{widget.description}}&amp;lt;/td&amp;gt;
+            &amp;lt;td&amp;gt;Edit&amp;amp;nbsp;|&amp;amp;nbsp;Delete&amp;lt;/td&amp;gt;
+        &amp;lt;/tr&amp;gt;
+      &amp;lt;/tbody&amp;gt;
+
+    &amp;lt;/table&amp;gt;
+
+&amp;lt;/div&amp;gt;
+
+&amp;lt;div class=&amp;quot;row&amp;quot;&amp;gt;
+
+    &amp;lt;div class=&amp;quot;col-xs-12&amp;quot;&amp;gt;
+
+        &amp;lt;button id=&amp;quot;add-widget&amp;quot; 
+                ng-click=&amp;quot;addWidget()&amp;quot; 
+                ng-disabled=&amp;quot;model.operationInProgress&amp;quot;&amp;gt;Add&amp;lt;/button&amp;gt;
+
+    &amp;lt;/div&amp;gt;
+
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Finally, modify our app configuration in &lt;code&gt;app.ts&lt;/code&gt; to invoke constructor whenever user navigates to the home page:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//    Configure application module.    
+app.config([&amp;quot;appConfig&amp;quot;, &amp;quot;$stateProvider&amp;quot;, &amp;quot;$urlRouterProvider&amp;quot;, function (appConfig: AppConfig, $stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) {
+    $stateProvider
+        .state(&amp;quot;root&amp;quot;, {
+            url: &amp;quot;/&amp;quot;,
+            controller: &amp;quot;widgetManagerController&amp;quot;,
+            templateUrl: getPathToTemplate(appConfig, &amp;quot;index.html&amp;quot;)
+        });
+
+    $urlRouterProvider.otherwise(&amp;quot;/&amp;quot;);
+}]);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now, if you run &lt;code&gt;gulp compile-app&lt;/code&gt;, then &lt;code&gt;gulp copy-templates&lt;/code&gt; and then start the application, you should be able to see the list of widgets consisting of one line.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/196ca6533a44c2f1a264b831cd9fcf168fe110cf&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;more-functional-widget-list-line-item&quot;&gt;More functional widget list line item&lt;/h3&gt;
+&lt;p&gt;Our line item for widget list is not static: the user can edit or delete/restore the widget by clicking links on the line. At the same time, the links are shown or hidden 
+based on the widget status. To make things more interesting for the user, we’ll be showing a message that conveys which operation is currently active for the widget and show
+the widget in a special way, if it was deleted.&lt;/p&gt;
+&lt;p&gt;While it is possible to implement all this functionality in &lt;code&gt;widgetManagerController.ts&lt;/code&gt;, doing so will saddle the controller with more responsibilities than necessary 
+and will make both code and template cumbersome and unnecessarily complicated.&lt;/p&gt;
+&lt;p&gt;Instead, we’ll extract the widget line item into its own template and implement the business logic via directive.&lt;/p&gt;
+&lt;p&gt;Let’s define widget line item scope in &lt;code&gt;appTypes.d.ts&lt;/code&gt;. &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/** Scope of the widget line item in the widget manager. */    
+interface WidgetLineItemScope {
+    /** Model. */
+    model: Widget;
+
+    /** Indicates whether the widget could be edited or deleted. */        
+    canEditOrDelete(widget: Widget): boolean;
+
+    /** Indicates whether the widget is being deleted. */        
+    isDeleting(widget: Widget): boolean;
+
+    /** Indicates whether the widget was deleted. */        
+    isDeleted(widget: Widget): boolean;
+
+    /** Indicates whether the widget is being restored after it was deleted earlier. */        
+    isUndoingDelete(widget: Widget): boolean;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In order to do that, we’ll move &lt;code&gt;&amp;lt;tr&amp;gt;&lt;/code&gt; from &lt;code&gt;index.html&lt;/code&gt; to &lt;code&gt;widgetLineItem.html&lt;/code&gt; and add more markup to help us with the functionality we want.
+Note that markup uses functionality we described earlier in &lt;code&gt;WidgetLineItemScope&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;tr ng-class=&amp;quot;{deleted: isDeleted(model) || isUndoingDelete(model) }&amp;quot;&amp;gt;
+    &amp;lt;td&amp;gt;{{model.id}}&amp;lt;/td&amp;gt;
+    &amp;lt;td&amp;gt;{{model.name}}&amp;lt;/td&amp;gt;
+    &amp;lt;td&amp;gt;{{model.amount}}&amp;lt;/td&amp;gt;
+    &amp;lt;td&amp;gt;{{model.description}}&amp;lt;/td&amp;gt;
+    &amp;lt;td&amp;gt;
+        &amp;lt;span ng-if=&amp;quot;canEditOrDelete(model)&amp;quot;&amp;gt;
+            &amp;lt;a href=&amp;quot;#&amp;quot; ng-click=&amp;quot;onEditWidget({ widget: model })&amp;quot;&amp;gt;Edit&amp;lt;/a&amp;gt;
+            &amp;amp;nbsp;|&amp;amp;nbsp;
+            &amp;lt;a href=&amp;quot;#&amp;quot; ng-click=&amp;quot;onDeleteWidget({ widget: model })&amp;quot;&amp;gt;Delete&amp;lt;/a&amp;gt;
+        &amp;lt;/span&amp;gt;
+        &amp;lt;span ng-if=&amp;quot;isDeleting(model)&amp;quot;&amp;gt;
+            deleting...
+        &amp;lt;/span&amp;gt;
+        &amp;lt;span ng-if=&amp;quot;isUndoingDelete(model)&amp;quot;&amp;gt;
+            restoring...
+        &amp;lt;/span&amp;gt;
+        &amp;lt;span ng-if=&amp;quot;isDeleted(model)&amp;quot;&amp;gt;
+            &amp;lt;a href=&amp;quot;#&amp;quot; ng-click=&amp;quot;onUndeleteWidget({ widget: model })&amp;quot;&amp;gt;Undo&amp;lt;/a&amp;gt;
+        &amp;lt;/span&amp;gt;
+    &amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Directive code will be placed to &lt;code&gt;directives\widgetLineItemDirective.ts&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/// &amp;lt;reference path=&amp;quot;../appTypes.d.ts&amp;quot; /&amp;gt;
+
+namespace WidgetRegistry {
+
+    /** Widget line item directive. */    
+    export class WidgetLineItemDirective implements ng.IDirective {
+        /** Directive factory. */
+        public static Factory = (): ng.IDirectiveFactory =&amp;gt; {
+            var factory = (...args: any[]): WidgetLineItemDirective =&amp;gt; {
+                var instance = &amp;lt;WidgetLineItemDirective&amp;gt;{};
+                WidgetLineItemDirective.apply(instance, args);
+                return instance;
+            }
+            factory.$inject = [&amp;quot;appConfig&amp;quot;];
+
+            return factory;
+        }
+
+        constructor(
+            private appConfig: AppConfig) {
+
+            this.templateUrl = appConfig.templateRoot + this.templateUrl;
+        }
+
+        /** Part of ng.IDirective. */        
+        public scope = {
+            model: &amp;quot;=widget&amp;quot;,
+            onEditWidget: &amp;quot;&amp;amp;&amp;quot;,
+            onDeleteWidget: &amp;quot;&amp;amp;&amp;quot;,
+            onUndeleteWidget: &amp;quot;&amp;amp;&amp;quot;
+        };
+
+        /** Part of ng.IDirective. */        
+        public templateUrl = &amp;quot;widgetLineItem.html&amp;quot;;
+
+        /** Part of ng.IDirective. */        
+        public restrict = &amp;quot;A&amp;quot;;
+
+        /** Part of ng.IDirective. */        
+        public replace = true;
+
+        /** Part of ng.IDirective. */        
+        public link = (scope: WidgetLineItemScope, element: ng.IAugmentedJQuery, attrs: ng.IAttributes): void =&amp;gt; {
+            scope.canEditOrDelete = this.canEditOrDelete;
+            scope.isDeleted = this.isDeleted;
+            scope.isDeleting = this.isDeleting;
+            scope.isUndoingDelete = this.isUndoingDelete;
+        }
+
+        /** Part of WidgetLineItemScope. */        
+        private canEditOrDelete = (widget: Widget): boolean =&amp;gt; {
+            return !widget.$state || WidgetState.existing == widget.$state || WidgetState.new == widget.$state;
+        }
+
+        /** Part of WidgetLineItemScope. */        
+        private isDeleting = (widget: Widget): boolean =&amp;gt; {
+            return !!widget.$state &amp;amp;&amp;amp; WidgetState.deleting == widget.$state;
+        }
+
+        /** Part of WidgetLineItemScope. */        
+        private isUndoingDelete = (widget: Widget): boolean =&amp;gt; {
+            return !!widget.$state &amp;amp;&amp;amp; WidgetState.undeleting == widget.$state;
+        }
+
+        /** Part of WidgetLineItemScope. */        
+        private isDeleted = (widget: Widget): boolean =&amp;gt; {
+            return !!widget.$state &amp;amp;&amp;amp; WidgetState.deleted == widget.$state;
+        }
+    }
+
+    //    Register with application module.    
+    angular.module(appModuleName).directive(&amp;quot;widgetLineItem&amp;quot;, WidgetLineItemDirective.Factory());
+
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Notice the static &lt;code&gt;Factory&lt;/code&gt; method and how it’s being used in Angular’s directive declaration at the bottom of the file. In TypeScript/Angular world this
+is probably the most bizarre construction that differs from any other Angular concept.&lt;/p&gt;
+&lt;p&gt;Also notice that this directive creates its own &lt;code&gt;scope&lt;/code&gt; with model and several callbacks. This will be wired in &lt;code&gt;index.html&lt;/code&gt; like shown below.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;tr ng-repeat=&amp;quot;widget in model.widgets&amp;quot; 
+    data-widget-line-item 
+    data-widget=&amp;quot;widget&amp;quot;
+    data-on-edit-widget=&amp;quot;editWidget(widget)&amp;quot; 
+    data-on-delete-widget=&amp;quot;deleteWidget(widget)&amp;quot; 
+    data-on-undelete-widget=&amp;quot;undeleteWidget(widget)&amp;quot;&amp;gt;&amp;lt;/tr&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;All this line item markup does is, it instantiates the &lt;code&gt;widgetLineItem&lt;/code&gt; directive (see &lt;code&gt;data-widget-line-item&lt;/code&gt; attribute) and provides all data 
+(&lt;code&gt;data-widget&lt;/code&gt;) and callbacks (&lt;code&gt;data-on-*-widget&lt;/code&gt;) required by the directive to configure
+its scope. The &lt;code&gt;widget&lt;/code&gt; is current iterator of the widgets list value. All callbacks are pointing to methods placed on scope by the &lt;code&gt;widgetManagerController&lt;/code&gt; 
+in its constructor. The directive also indicates that it will replace whatever HTML element it’s being associated with, and indeed, as you can see in 
+&lt;code&gt;widgetLineItem.html&lt;/code&gt;, we provide all markup necessary to create HTML table row.&lt;/p&gt;
+&lt;p&gt;Finally, modify &lt;code&gt;widgetManagerController.ts&lt;/code&gt; with the code that simulates requested activity. We will re-implement real logic later in the development cycle.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/** Part of WidgetManagerScope. */        
+private addWidget = (): void =&amp;gt; {
+    alert(&amp;quot;add&amp;quot;);
+}
+
+/** Part of WidgetManagerScope. */        
+private editWidget = (widget: Widget): void =&amp;gt; {
+    alert(&amp;quot;edit&amp;quot;);
+}
+
+/** Part of WidgetManagerScope. */        
+private deleteWidget = (widget: Widget): void =&amp;gt; {
+    alert(&amp;quot;delete&amp;quot;);
+    widget.$state = WidgetState.deleted;
+}
+
+/** Part of WidgetManagerScope. */        
+private undeleteWidget = (widget: Widget): void =&amp;gt; {
+    alert(&amp;quot;undelete&amp;quot;);
+    widget.$state = WidgetState.existing;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/12c589c244caa5a21581093e0270ac6f45e3dde6&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;widget-editor&quot;&gt;Widget editor&lt;/h3&gt;
+&lt;p&gt;The only UI part that is left to implement is a widget editor. In this particular application I decided to go with a modal popup editor. You may choose to
+go with a UI state that will replace widget list view instead. For all intents and purposes it doesn’t matter for the editor implementation: what will change
+is how editor accesses the item it is supposed to edit. In case of modal popup, we’ll have &lt;code&gt;widgetManagerController&lt;/code&gt; providing an instance of widget to edit.
+If you go with the UI state, you may create “add” and “edit” states: the latter will have an ID as a parameter and editor will select an item from the
+shared data module, while the former will mean that editor should create a new instance and then add it to the shared data module for the manager to consume.&lt;/p&gt;
+&lt;p&gt;As usual, we’ll start by adding editor types to &lt;code&gt;appTypes.d.ts&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;type WidgetOperationCallback = (widget: Widget) =&amp;gt; ng.IPromise&amp;lt;any&amp;gt;;
+
+/** Widget editor model. */    
+interface WidgetEditorModel {
+    /** Widget that is being edited. */
+    widget: Widget;
+
+    /** Callback to perform widget operation when user commits changes in the editor. */        
+    performWidgetOperation: WidgetOperationCallback;
+
+    /** Indicates whether the data is valid. */        
+    isValid?: boolean;
+
+    /** Indicates whether the operation is in progress. */        
+    operationInProgress?: boolean;
+
+    /** If operation results in an error, contains a message. */
+    errorMessage?: string;            
+}
+
+/** Scope of the widget editor. */    
+interface WidgetEditorScope extends ng.IScope{
+    /** Widget editor model. */
+    model: WidgetEditorModel;
+
+    /** Occurs when user clicks OK button. */        
+    ok(): void;
+
+    /** Occurs when user clicks Cancel button. */        
+    cancel(): void;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Editor template &lt;code&gt;templates\widgetEditor.html&lt;/code&gt; will look like below.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;div class=&amp;quot;alert alert-danger&amp;quot; ng-if=&amp;quot;model.errorMessage&amp;quot;&amp;gt;
+    {{model.errorMessage}}
+&amp;lt;/div&amp;gt;
+
+&amp;lt;form&amp;gt;
+
+    &amp;lt;div class=&amp;quot;modal-header&amp;quot;&amp;gt;
+        &amp;lt;h3 class=&amp;quot;modal-title&amp;quot;&amp;gt;Add/edit widget&amp;lt;/h3&amp;gt;
+    &amp;lt;/div&amp;gt;
+
+    &amp;lt;div class=&amp;quot;modal-body&amp;quot;&amp;gt;
+
+      &amp;lt;div class=&amp;quot;form-group&amp;quot; ng-if=&amp;quot;!model.isValid&amp;quot;&amp;gt;
+          &amp;lt;span class=&amp;quot;text-danger&amp;quot;&amp;gt;Please check your input.&amp;lt;/span&amp;gt;
+      &amp;lt;/div&amp;gt;
+
+      &amp;lt;div class=&amp;quot;form-group&amp;quot;&amp;gt;
+        &amp;lt;label for=&amp;quot;widget-name&amp;quot;&amp;gt;Name:&amp;lt;/label&amp;gt;
+        &amp;lt;input type=&amp;quot;text&amp;quot; class=&amp;quot;form-control&amp;quot; id=&amp;quot;widget-name&amp;quot; placeholder=&amp;quot;Widget name&amp;quot; ng-model=&amp;quot;model.widget.name&amp;quot;&amp;gt;
+      &amp;lt;/div&amp;gt;
+
+      &amp;lt;div class=&amp;quot;form-group&amp;quot;&amp;gt;
+        &amp;lt;label for=&amp;quot;widget-amount&amp;quot;&amp;gt;Amount:&amp;lt;/label&amp;gt;
+        &amp;lt;input type=&amp;quot;range&amp;quot; class=&amp;quot;form-control&amp;quot; id=&amp;quot;widget-amount&amp;quot; min=&amp;quot;0&amp;quot; max=&amp;quot;1000&amp;quot; step=&amp;quot;50&amp;quot; ng-model=&amp;quot;model.widget.amount&amp;quot;&amp;gt;
+      &amp;lt;/div&amp;gt;
+
+      &amp;lt;div class=&amp;quot;form-group&amp;quot;&amp;gt;
+        &amp;lt;label for=&amp;quot;widget-description&amp;quot;&amp;gt;Description:&amp;lt;/label&amp;gt;
+        &amp;lt;textarea class=&amp;quot;form-control&amp;quot; id=&amp;quot;widget-description&amp;quot; rows=&amp;quot;5&amp;quot; ng-model=&amp;quot;model.widget.description&amp;quot;&amp;gt;&amp;lt;/textarea&amp;gt;
+      &amp;lt;/div&amp;gt;
+
+    &amp;lt;/div&amp;gt;
+
+    &amp;lt;div class=&amp;quot;modal-footer&amp;quot;&amp;gt;
+        &amp;lt;button type=&amp;quot;submit&amp;quot; class=&amp;quot;btn btn-default&amp;quot; ng-click=&amp;quot;ok()&amp;quot;&amp;gt;OK&amp;lt;/button&amp;gt;
+        &amp;lt;button class=&amp;quot;btn&amp;quot; ng-click=&amp;quot;cancel()&amp;quot;&amp;gt;Cancel&amp;lt;/button&amp;gt;
+    &amp;lt;/div&amp;gt;
+
+&amp;lt;/form&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And finally, implement the controller in &lt;code&gt;widgetEditorController.ts&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/// &amp;lt;reference path=&amp;quot;../appTypes.d.ts&amp;quot; /&amp;gt;
+
+namespace WidgetRegistry {
+
+    /** Widget editor controller. */
+    export class WidgetEditorController {
+        /** Dependencies. */
+        public static $inject = [&amp;quot;model&amp;quot;, &amp;quot;appConfig&amp;quot;, &amp;quot;$scope&amp;quot;, &amp;quot;$modalInstance&amp;quot;];
+
+        constructor(
+            model: WidgetEditorModel,
+            private appConfig: AppConfig,
+            private $scope: WidgetEditorScope,
+            private $modalInstance: ng.ui.bootstrap.IModalServiceInstance) {
+
+            $scope.model = model;
+            $scope.model.isValid = true;
+            $scope.model.operationInProgress = false;
+            $scope.ok = this.ok;
+            $scope.cancel = () =&amp;gt; $modalInstance.dismiss();
+        }
+
+        /** Part of WidgetEditorScope. */        
+        private ok = (): void =&amp;gt; {
+            if (!this.isValid()) {
+                this.$scope.model.isValid = false;
+                return;
+            }
+            this.$scope.model.isValid = true;
+
+            this.performOperation(
+                this.$scope.model.performWidgetOperation(this.$scope.model.widget)
+                    .then(() =&amp;gt; this.$modalInstance.close())
+                    .catch(() =&amp;gt; this.$scope.model.errorMessage = &amp;quot;We cannot save your changes now. Please try again later.&amp;quot;));
+        }
+
+        /** Part of WidgetEditorScope. */        
+        private isValid = (): boolean =&amp;gt; {
+            return !!this.$scope.model.widget.name;
+        }
+
+        /** Wraps an operation with operationInProgress indicator. */        
+        private performOperation = (operationPromise: ng.IPromise&amp;lt;any&amp;gt;): void =&amp;gt; {
+            this.$scope.model.operationInProgress = true;
+            this.$scope.model.errorMessage = &amp;quot;&amp;quot;;
+
+            operationPromise.finally(() =&amp;gt; this.$scope.model.operationInProgress = false);
+        }
+    }
+
+    //    Register with application module.    
+    angular.module(appModuleName).controller(&amp;quot;widgetEditorController&amp;quot;, WidgetEditorController);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Note that the editor doesn’t really perform any operations on widget list (neither adding nor modifying). Instead, the &lt;code&gt;widgetManagerController&lt;/code&gt; owns
+the list and delegates operations via the &lt;code&gt;performWidgetOperation&lt;/code&gt; callback that it configures as part of the &lt;code&gt;model&lt;/code&gt; when invoking
+the &lt;code&gt;widgetEditorController&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Let’s implement add/edit functionality in &lt;code&gt;widgetManagerController&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/** Dependencies. */
+public static $inject = [&amp;quot;appConfig&amp;quot;, &amp;quot;$scope&amp;quot;, &amp;quot;widgetService&amp;quot;, &amp;quot;$modal&amp;quot;];
+
+constructor(
+    private appConfig: AppConfig,
+    private $scope: WidgetManagerScope,
+    private widgetService: IWidgetService,
+    private $modal: ng.ui.bootstrap.IModalService) {
+
+    ...
+}
+
+/** Part of WidgetManagerScope. */        
+private addWidget = (): void =&amp;gt; {
+    var widget: Widget = {
+        $state: WidgetState.new,
+        id: (Math.random() * 100).toFixed(0),
+        name: &amp;quot;&amp;quot;,
+        amount: Math.floor(Math.random() * 1000),
+        description: &amp;quot;&amp;quot;
+    };
+
+    this.editWidgetImpl(widget, this.widgetService.createWidget).then(() =&amp;gt; {
+        this.$scope.model.widgets.push(widget);
+    });    
+}
+
+/** Part of WidgetManagerScope. */        
+private editWidget = (widget: Widget): void =&amp;gt; {
+    var selectedWidget = angular.copy(widget);
+
+    this.editWidgetImpl(selectedWidget, this.widgetService.updateWidget).then(() =&amp;gt; {
+        angular.copy(selectedWidget, widget);
+    });    
+}
+
+/** Invokes widget editor. */        
+private editWidgetImpl = (widget: Widget, callback: WidgetOperationCallback): ng.IPromise&amp;lt;any&amp;gt; =&amp;gt; {
+    return this.$modal.open({
+        resolve: {
+            model: (): WidgetEditorModel =&amp;gt; {
+                return {
+                    widget: widget,
+                    performWidgetOperation: callback
+                };
+            }
+        },
+        templateUrl: this.$scope.pathToTemplate(&amp;quot;widgetEditor.html&amp;quot;),
+        controller: &amp;quot;widgetEditorController&amp;quot;
+    }).result;    
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We added a dependency on &lt;code&gt;$modal&lt;/code&gt; and implemented &lt;code&gt;addWidget&lt;/code&gt; and &lt;code&gt;editWidget&lt;/code&gt; via &lt;code&gt;editWidgetImpl&lt;/code&gt;. Take a look at the &lt;code&gt;resolve&lt;/code&gt; member
+of the call to &lt;code&gt;$modal.open&lt;/code&gt;: it provides the &lt;code&gt;model&lt;/code&gt; value that &lt;code&gt;widgetEditorController&lt;/code&gt; depends on (see its &lt;code&gt;$inject&lt;/code&gt; and &lt;code&gt;constructor&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Another point of interest here is that &lt;code&gt;editWidget&lt;/code&gt; makes a copy of the line that is being edited. If we’d pass the widget instance as is, any change
+in the editor would be reflected in this instance, even though the user could’ve canceled the editing operation. By making a copy, we ensure that the instance,
+that is being edited, will make it to the list only if the user commits the change.  &lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/b30ebc78d2c1fe4af0e5c6ed62354503edee7441&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;real-service-implementation&quot;&gt;Real service implementation&lt;/h3&gt;
+&lt;p&gt;We’re finally ready to implement our backend service.&lt;/p&gt;
+&lt;p&gt;First, create &lt;code&gt;Models\Widget.cs&lt;/code&gt; that will maintain server-side model:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNet.Mvc;
+
+namespace WidgetRegistry.Models
+{
+    public class Widget
+    {
+        public string id { get; set; }
+
+        public string name { get; set; }
+
+        public double amount { get; set; }
+
+        public string description { get; set; }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then, create &lt;code&gt;Controllers\WidgetsController.cs&lt;/code&gt; with code as shown below. ASP.NET’s default routing will pick up our service without us doing anything special.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNet.Mvc;
+using WidgetRegistry.Models;
+
+namespace WidgetRegistry.Controllers
+{
+    [Route(&amp;quot;api/[controller]&amp;quot;)]
+    public class WidgetsController : Controller
+    {
+        [Route(&amp;quot;all&amp;quot;)]
+        [HttpGet]
+        public IActionResult GetWidgets()
+        {
+            return new ObjectResult(new[]
+            {
+                new Widget() { id = &amp;quot;1&amp;quot;, name = &amp;quot;qwe&amp;quot;, amount = 123, description = &amp;quot;asd&amp;quot; },
+                new Widget() { id = &amp;quot;2&amp;quot;, name = &amp;quot;asd&amp;quot;, amount = 456, description = &amp;quot;zxc&amp;quot; },
+                new Widget() { id = &amp;quot;3&amp;quot;, name = &amp;quot;zxc&amp;quot;, amount = 789, description = &amp;quot;qwe&amp;quot; }
+            });
+        }
+
+        [HttpPut]
+        public IActionResult CreateWidget([FromBody] Widget widget)
+        {
+            return ResultFromWidget(widget);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateWidget([FromBody] Widget widget)
+        {
+            return ResultFromWidget(widget);
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteWidget(int id)
+        {
+            return new EmptyResult();
+        }
+
+        [HttpPatch]
+        public IActionResult UndeleteWidget(int id)
+        {
+            return new EmptyResult();
+        }
+
+        private IActionResult ResultFromWidget(Widget widget)
+        {
+            if (null == widget || string.IsNullOrEmpty(widget.name) || &amp;quot;error&amp;quot; == widget.name)
+            {
+                return new HttpStatusCodeResult(500);
+            }
+
+            return new EmptyResult();
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Make sure to run &lt;code&gt;dnu build&lt;/code&gt; and restart your application.&lt;/p&gt;
+&lt;p&gt;After finishing the backend part of our service, let’s make sure our frontend’s Angular service talks to the backend. We can now remove
+the dependency on &lt;code&gt;$q&lt;/code&gt; and re-implement &lt;code&gt;IWidgetService&lt;/code&gt; using &lt;code&gt;$http&lt;/code&gt; instead.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/// &amp;lt;reference path=&amp;quot;../appTypes.d.ts&amp;quot; /&amp;gt;
+
+namespace WidgetRegistry {
+
+    /** Backend service communications. */    
+    export class WidgetService implements IWidgetService {
+        //    Dependencies.
+        public static $inject = [&amp;quot;appConfig&amp;quot;, &amp;quot;$q&amp;quot;, &amp;quot;$http&amp;quot;];
+
+        constructor(
+            private appConfig: AppConfig,
+            private $q: ng.IQService,
+            private $http: ng.IHttpService) {
+        }
+
+        /** Part of IWidgetService. */
+        public getWidgets = (): ng.IPromise&amp;lt;WidgetList&amp;gt; =&amp;gt; {
+            return this.httpPromiseAsPromise(this.$http.get(this.appConfig.apiEndpoint + &amp;quot;all&amp;quot;));
+        }
+
+        /** Part of IWidgetService. */
+        public createWidget = (widget: Widget): ng.IPromise&amp;lt;any&amp;gt; =&amp;gt; {
+            return this.httpPromiseAsPromise(this.$http.put(this.appConfig.apiEndpoint, widget));
+        }
+
+        /** Part of IWidgetService. */
+        public updateWidget = (widget: Widget): ng.IPromise&amp;lt;any&amp;gt; =&amp;gt; {
+            return this.httpPromiseAsPromise(this.$http.post(this.appConfig.apiEndpoint, widget));
+        }
+
+        /** Part of IWidgetService. */
+        public deleteWidget = (widget: Widget): ng.IPromise&amp;lt;any&amp;gt; =&amp;gt; {
+            return this.httpPromiseAsPromise(this.$http.delete(this.appConfig.apiEndpoint, { params: widget }));
+        }
+
+        /** Part of IWidgetService. */
+        public undoWidgetDelete = (widget: Widget): ng.IPromise&amp;lt;any&amp;gt; =&amp;gt; {
+            return this.httpPromiseAsPromise(this.$http.patch(this.appConfig.apiEndpoint, { params: widget }));
+        }
+
+        /** 
+         * Converts HTTP operation promise to a generic promise.
+         * It&amp;#39;s not necessary to do. Instead IWidgetService should&amp;#39;ve used IHttpPromise&amp;lt;T&amp;gt; for return values.
+         * @param httpPromise HTTP operation promise to convert.
+         */        
+        private httpPromiseAsPromise = &amp;lt;T&amp;gt;(httpPromise: ng.IHttpPromise&amp;lt;T&amp;gt;): ng.IPromise&amp;lt;T&amp;gt; =&amp;gt; {
+            var deferred = this.$q.defer();
+            httpPromise
+                .success(response =&amp;gt; deferred.resolve(response))
+                .error((data: any, status: number) =&amp;gt; deferred.reject(status));
+
+            return deferred.promise;
+        }
+    }
+
+    //    Register with application module.    
+    angular.module(appModuleName).service(&amp;quot;widgetService&amp;quot;, WidgetService);
+
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Going back to our decision to use a service instead of calling &lt;code&gt;$http&lt;/code&gt; directly from the controller, you may see why this was
+a good idea: right now we were able to completely replace fake functionality with the real one; in future it’ll be possible for us 
+to add, for example, telemetry for each call to the backend, again, transparently for the calling code. If we had unit tests for
+our controller at this point, we wouldn’t need to change any of the test implementations, because we’d be stubbing &lt;code&gt;IWidgetService&lt;/code&gt;
+implementation, not &lt;code&gt;$q&lt;/code&gt; or &lt;code&gt;$http&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;In retrospect, hovewer, we should’ve used &lt;code&gt;IHttpPromise&amp;lt;T&amp;gt;&lt;/code&gt; on result types to avoid converting the promises. If we omit the conversion
+step in the current implementation, we’ll have to modify our calling code to use &lt;code&gt;response.data&lt;/code&gt; to access the data instead. This defeats
+our promise of having a transparent replacement of &lt;code&gt;WidgetService&lt;/code&gt; implementation. If you plan to use data that comes as part of failure
+response, you should definitely switch to using &lt;code&gt;IHttpPromise&amp;lt;T&amp;gt;&lt;/code&gt;.  &lt;/p&gt;
+&lt;p&gt;As a final touch, let’s make delete and restore features of &lt;code&gt;widgetManagerController.ts&lt;/code&gt; call the actual service and change widget statuses.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/** Part of WidgetManagerScope. */        
+private deleteWidget = (widget: Widget): void =&amp;gt; {
+    var widgetWasNew = (widget.$state &amp;amp;&amp;amp; WidgetState.new == widget.$state);
+    widget.$state = WidgetState.deleting;
+
+    this.performOperation(
+        this.widgetService.deleteWidget(widget)
+            .then(() =&amp;gt; {
+                if (widgetWasNew) {
+                    //    Delete newly created widgets.
+                    var idx = this.$scope.model.widgets.indexOf(widget);
+                    if (idx &amp;gt; -1) {
+                        this.$scope.model.widgets.splice(idx, 1);
+                    }
+                }
+                else {
+                    //    Allow to undo when an existing widget was deleted.
+                    widget.$state = WidgetState.deleted;
+                }
+            })
+            .catch(() =&amp;gt; {
+                widget.$state = (widgetWasNew) ? WidgetState.new : WidgetState.existing;
+                this.$scope.model.errorMessage = &amp;quot;Cannot delete widget. Please try again later.&amp;quot;;
+            }));
+}
+
+/** Part of WidgetManagerScope. */        
+private undeleteWidget = (widget: Widget): void =&amp;gt; {
+    widget.$state = WidgetState.undeleting;
+
+    this.performOperation(
+        this.widgetService.undoWidgetDelete(widget)
+            .then(() =&amp;gt; {
+                widget.$state = WidgetState.existing;
+            })
+            .catch(() =&amp;gt; {
+                widget.$state = WidgetState.deleted;
+                this.$scope.model.errorMessage = &amp;quot;Cannot restore deleted widget. Please try again later.&amp;quot;;
+            }));
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/82062ecbf4d0dbcbf89661ba989eeaac89dcc190&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;unit-testing&quot;&gt;Unit testing&lt;/h2&gt;
+&lt;h3 id=&quot;backend-unit-tests&quot;&gt;Backend unit tests&lt;/h3&gt;
+&lt;p&gt;We will use Xunit for backend unit tests.&lt;/p&gt;
+&lt;p&gt;Add following dependencies to &lt;code&gt;project.json&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;quot;dependencies&amp;quot;: {
+    ...
+    &amp;quot;xunit&amp;quot;: &amp;quot;2.1.0-beta4-build3109&amp;quot;,
+    &amp;quot;xunit.runner.dnx&amp;quot;: &amp;quot;2.1.0-beta4-build134&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Add a command to run tests:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;quot;commands&amp;quot;: {
+    ...
+    &amp;quot;test&amp;quot;: &amp;quot;xunit.runner.dnx&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Run &lt;code&gt;dnu restore&lt;/code&gt; to download and install Xunit locally. After the command is done, we’re ready to create our first unit tests for
+the backend service — &lt;code&gt;Tests\Backend\WidgetsControllerTests.cs&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;using System;
+using Microsoft.AspNet.Mvc;
+using WidgetRegistry.Controllers;
+using WidgetRegistry.Models;
+using Xunit;
+
+namespace WidgetRegistry.Tests
+{
+    public class WidgetsControllerTests
+    {
+        private readonly WidgetsController controller = new WidgetsController();
+
+        [Fact]
+        public void GetWidgets_CorrectResponse()
+        {
+            var result = controller.GetWidgets() as ObjectResult;
+            Assert.NotNull(result);
+
+            var widgets = result.Value as Widget[];
+            Assert.NotNull(widgets);
+            Assert.Equal(3, widgets.Length);
+        }
+
+        [Fact]
+        public void CreateWidget_CorrectResponse()
+        {
+            var result = controller.CreateWidget(CreateValidWidget()) as EmptyResult;
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void CreateWidget_ErrorResponse()
+        {
+            var result = controller.CreateWidget(CreateWidgetWithError()) as HttpStatusCodeResult;
+            Assert.NotNull(result);
+            Assert.Equal(500, result.StatusCode);
+        }
+
+        [Fact]
+        public void UpdateWidget_CorrectResponse()
+        {
+            var result = controller.UpdateWidget(CreateValidWidget()) as EmptyResult;
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void UpdateWidget_ErrorResponse()
+        {
+            var result = controller.UpdateWidget(CreateWidgetWithError()) as HttpStatusCodeResult;
+            Assert.NotNull(result);
+            Assert.Equal(500, result.StatusCode);
+        }
+
+        [Fact]
+        public void DeleteWidget_CorrectResponse()
+        {
+            var result = controller.DeleteWidget(1) as EmptyResult;
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void UndeleteWidget_CorrectResponse()
+        {
+            var result = controller.UndeleteWidget(1) as EmptyResult;
+            Assert.NotNull(result);
+        }
+
+        private Widget CreateValidWidget()
+        {
+            return new Widget()
+            {
+                id = &amp;quot;1&amp;quot;,
+                name = &amp;quot;test&amp;quot;,
+                amount = 123
+            };
+        }
+
+        private Widget CreateWidgetWithError()
+        {
+            return new Widget()
+            {
+                id = &amp;quot;1&amp;quot;,
+                name = &amp;quot;error&amp;quot;,
+                amount = 123
+            };
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Notice that this is the first time we simulate and test error handling in our service.&lt;/p&gt;
+&lt;p&gt;In order to run backend tests, press &lt;code&gt;Ctrl-Shift-P&lt;/code&gt; and type &lt;code&gt;test&lt;/code&gt;, then pick the DNX command that appears in the search results.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/e28c84f9d3c4f7d8d7fb585477ed6f779a5f9ab5&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;frontend-unit-tests&quot;&gt;Frontend unit tests&lt;/h3&gt;
+&lt;p&gt;For frontend tests we’ll also need a test execution engine and a test framework. For this project we’ll use &lt;a href=&quot;https://github.com/karma-runner/karma&quot;&gt;karma&lt;/a&gt; and 
+&lt;a href=&quot;https://github.com/karma-runner/karma-jasmine&quot;&gt;jasmine&lt;/a&gt; respectively.&lt;/p&gt;
+&lt;p&gt;Add new dependencies to &lt;code&gt;package.json&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;  &amp;quot;devDependencies&amp;quot;: {
+      ...
+    &amp;quot;karma&amp;quot;: &amp;quot;0.13.9&amp;quot;,
+    &amp;quot;karma-jasmine&amp;quot;: &amp;quot;0.3.6&amp;quot;,
+    &amp;quot;karma-phantomjs-launcher&amp;quot;: &amp;quot;0.2.1&amp;quot;,
+    &amp;quot;karma-coverage&amp;quot;: &amp;quot;0.5.0&amp;quot;,
+    &amp;quot;angular-mocks&amp;quot;: &amp;quot;1.4.0&amp;quot;,
+    &amp;quot;jasmine-jquery&amp;quot;: &amp;quot;2.1.0&amp;quot;
+  }
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Execute &lt;code&gt;npm install&lt;/code&gt; to download dependencies locally. Note that we’re using NPM to retrieve angular-mocks, even though angularjs itself is managed by Bower.&lt;/p&gt;
+&lt;p&gt;We will be writing our tests in TypeScript, so we’ll need to download typings for jasmine, add a couple of tasks in our gulpfile and create karma configuration.&lt;/p&gt;
+&lt;p&gt;Run &lt;code&gt;tsd install jasmine angular-mocks &amp;amp; tsd install jasmine-jquery&lt;/code&gt; in order to download typings for our test infrastructure.&lt;/p&gt;
+&lt;p&gt;Modify &lt;code&gt;gulpfile.js&lt;/code&gt; with following tasks:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;var karma = require(&amp;quot;karma&amp;quot;).server;
+
+var paths = {
+  ...
+  appTests: &amp;quot;./tests/frontend/&amp;quot;,
+};
+
+paths.testsOut = paths.webroot + &amp;quot;/tests/&amp;quot;
+paths.testSources = paths.appTests + &amp;quot;**/*.ts&amp;quot;;
+
+/* global __dirname */
+
+function runTests(doneCallback) {
+  karma.start({
+    configFile: __dirname + &amp;quot;/karma.conf.js&amp;quot;,
+    singleRun: true
+  }, doneCallback);
+}
+
+//  gulp run-tests
+gulp.task(&amp;quot;run-tests&amp;quot;, [&amp;quot;build-tests&amp;quot;], function (done) {
+  runTests(done);
+});
+
+gulp.task(&amp;quot;build-tests&amp;quot;, function () {
+  var tscResult = gulp.src([paths.testSources, paths.appSources, paths.typings + &amp;quot;**/*.d.ts&amp;quot;])
+                    .pipe(sourcemaps.init())
+                    .pipe(tsc({
+                      target: &amp;quot;ES5&amp;quot;,
+                      removeComments: false,
+                      noImplicitAny: true,
+                      noEmitOnError: true,
+                      noExternalResolve: true
+                    }));  
+
+  return tscResult.js
+          .pipe(sourcemaps.write(&amp;quot;maps/&amp;quot;))                  //  Relative to testsOut.
+          .pipe(gulp.dest(paths.testsOut));
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Notice that on the contrary to app compilation, the task that compiles tests, doesn’t use a single output file and compiles code 1:1 instead. This
+decision makes debugging tests much easier.&lt;/p&gt;
+&lt;p&gt;In order for karma to run, create &lt;code&gt;karma.conf.js&lt;/code&gt; next to the &lt;code&gt;gulpfile.js&lt;/code&gt;. Our configuration file will include all files necessary to
+execute unit tests and will instruct karma to collect coverage data.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;module.exports = function(config) {
+  config.set({
+    frameworks: [&amp;quot;jasmine&amp;quot;],
+    browsers: [&amp;quot;PhantomJS&amp;quot;],
+    phantomjsLauncher: {
+      exitOnResourceError: true
+    },
+
+    files: [
+      &amp;quot;./wwwroot/lib/angular/angular.min.js&amp;quot;,
+      &amp;quot;./wwwroot/lib/angular-bootstrap/ui-bootstrap-tpls.min.js&amp;quot;,
+      &amp;quot;./wwwroot/lib/angular-ui-router/release/angular-ui-router.min.js&amp;quot;,
+      &amp;quot;./wwwroot/lib/jquery/dist/jquery.min.js&amp;quot;,
+      &amp;quot;./node_modules/angular-mocks/angular-mocks.js&amp;quot;,
+      &amp;quot;./node_modules/jasmine-jquery/lib/jasmine-jquery.js&amp;quot;,
+      &amp;quot;./wwwroot/js/**/*.js&amp;quot;,
+      &amp;quot;./wwwroot/tests/setup.js&amp;quot;,
+      &amp;quot;./wwwroot/tests/tests/**/*.js&amp;quot;
+    ],
+    exclude: [
+      &amp;quot;./wwwroot/js/templates.js&amp;quot;,
+    ],
+
+    reporters: [&amp;quot;progress&amp;quot;, &amp;quot;coverage&amp;quot;],
+
+    preprocessors: {
+      &amp;quot;./wwwroot/js/**/*.js&amp;quot;: [&amp;quot;coverage&amp;quot;]
+    },
+
+    coverageReporter: {
+      type: &amp;quot;html&amp;quot;,
+      dir: &amp;quot;./wwwroot/tests/coverage/&amp;quot;
+    }
+  });
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;After completing all changes listed above, you’ll be able to run &lt;code&gt;gulp run-tests&lt;/code&gt; in order to execute unit tests (the run will fail due
+to missing tests, obviously).&lt;/p&gt;
+&lt;h4 id=&quot;developing-frontend-unit-tests&quot;&gt;Developing frontend unit tests&lt;/h4&gt;
+&lt;p&gt;The minimal unit test might look like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;describe(&amp;quot;foo&amp;quot;, function() {
+
+    it(&amp;quot;bar&amp;quot;, function() {
+        //    Code your expectations here.
+    });
+
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;However, since we’re dealing with Angular, we’ll need to provide enough of infrastructure and mocks in order to be able to execute
+code under test in our services, controllers and directives. The good news is that if application architectured well, it’s very
+easy to do so, because Angular code is testable by design.&lt;/p&gt;
+&lt;p&gt;This is how we’ll organize our frontend tests:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;Tests\Frontend\_references.d.ts&lt;/code&gt; will contain references to all typings our unit tests will need.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Tests\Frontend\setup.ts&lt;/code&gt; will define all types specific for unit tests along with mock infrastructure that is required by Angular.&lt;/li&gt;
+&lt;li&gt;All test code will live under &lt;code&gt;Tests\Frontend\tests&lt;/code&gt; folder.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The easiest part is &lt;code&gt;Tests\Frontend\_references.d.ts&lt;/code&gt; — this file should include your application and mock infrastructure types, enough
+to compile your tests.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/// &amp;lt;reference path=&amp;quot;../../scripts/appTypes.d.ts&amp;quot; /&amp;gt;
+/// &amp;lt;reference path=&amp;quot;../../typings/angularjs/angular-mocks.d.ts&amp;quot; /&amp;gt;
+/// &amp;lt;reference path=&amp;quot;../../typings/jasmine/jasmine.d.ts&amp;quot; /&amp;gt;
+/// &amp;lt;reference path=&amp;quot;../../typings/jasmine-jquery/jasmine-jquery.d.ts&amp;quot; /&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;Tests\Frontend\setup.ts&lt;/code&gt; is handling all heavy lifting required to mock and fake Angular infrastructure. We will fake the data module
+(&lt;code&gt;widgetRegistryData&lt;/code&gt;), mock the application module (&lt;code&gt;widgetRegistryApp&lt;/code&gt;) and use &lt;code&gt;mock.inject()&lt;/code&gt; to gain access to dependencies 
+of our controllers and services. Once we have this access, it’s very easy to mock required dependencies in order to simulate behaviors we want 
+to verify.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/// &amp;lt;reference path=&amp;quot;_references.d.ts&amp;quot; /&amp;gt;
+
+/** Mock application module information. */
+interface WidgetRegistryAppMock {
+    config: WidgetRegistry.AppConfig;
+}
+
+/** Mock controllers for application. */
+interface WidgetRegistryControllerMock {
+    /** Controller factory. */
+    factory: ng.IControllerService;
+
+    /** Root scope. */    
+    rootScope: ng.IRootScopeService;
+
+    /** Modal service. */    
+    modal: ng.ui.bootstrap.IModalService;
+
+    /** Q service. */    
+    promises: ng.IQService;    
+}
+
+/** Mock widgetService instance and utilities. */
+interface WidgetServiceMock {
+    /** $httpBackend service instance. */
+    httpMock: ng.IHttpBackendService;
+
+    /** Service instance. */    
+    instance: WidgetRegistry.IWidgetService;
+}
+
+/** Starts mock application. */
+function startApplication(): WidgetRegistryAppMock {
+    var result = {
+        config: {
+            apiEndpoint: &amp;quot;/api/widgets/&amp;quot;,
+            templateRoot: &amp;quot;/templates/&amp;quot;
+        }
+    };
+
+    var appData = angular.module(&amp;quot;widgetRegistryData&amp;quot;, []);
+    appData.constant(&amp;quot;appConfig&amp;quot;, result.config);
+
+    angular.mock.module(&amp;quot;widgetRegistryApp&amp;quot;);
+
+    //    Fake successful downloads for templates.
+    angular.mock.inject(($httpBackend: ng.IHttpBackendService) =&amp;gt; {
+        $httpBackend.whenGET(/templates\/.+/).respond(200);
+    });
+
+    return result;
+}
+
+/** Mocks controller. */
+function mockWidgetRegistryController(): WidgetRegistryControllerMock {
+    var result = &amp;lt;WidgetRegistryControllerMock&amp;gt;{};
+
+    angular.mock.inject(($controller: ng.IControllerService, $rootScope: ng.IRootScopeService, $modal: ng.ui.bootstrap.IModalService, $q: ng.IQService) =&amp;gt; {
+        result.factory = $controller;
+        result.rootScope = $rootScope;
+        result.modal = $modal;
+        result.promises = $q;
+    });
+
+    return result;
+}
+
+/** Mocks widgetService. */
+function mockWidgetService(): WidgetServiceMock {
+    var result = &amp;lt;WidgetServiceMock&amp;gt;{};
+
+    angular.mock.inject((widgetService: WidgetRegistry.IWidgetService, $httpBackend: ng.IHttpBackendService) =&amp;gt; {
+        result.httpMock = $httpBackend;
+        result.instance = widgetService;
+    });
+
+    return result;
+}
+
+/** Creates fake widget instance. */    
+function createFakeWidgetInstance(): WidgetRegistry.Widget {
+    return {
+        id: &amp;quot;123&amp;quot;,
+        name: &amp;quot;some widget&amp;quot;,
+        amount: 5
+    };
+}
+
+/** Creates regular expression to match any API endpoint URL with query parameters. */
+function getEndpointWithQueryStringRegexp(config: WidgetRegistry.AppConfig): RegExp {
+    return new RegExp(config.apiEndpoint + &amp;quot;\?.*&amp;quot;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Do not be surprised by the following limitations:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;startApplication()&lt;/code&gt; can be called only once per test case execution.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;mockWidgetRegistryController()&lt;/code&gt;, &lt;code&gt;mockWidgetService()&lt;/code&gt; and in general anything that uses &lt;code&gt;angular.mock.inject()&lt;/code&gt; can be called until Angular constructs an 
+instance of controller, service or directive.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Each function here returns an object that provides access to various dependencies. We may use &lt;code&gt;WidgetRegistryAppMock&lt;/code&gt; members to modify application configuration
+or data on the fly, and &lt;code&gt;WidgetRegistryControllerMock&lt;/code&gt; or &lt;code&gt;WidgetServiceMock&lt;/code&gt; members to control controller or service instances. &lt;/p&gt;
+&lt;p&gt;Once we done with our infrastructure code, we can finally write a proper unit test.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/// &amp;lt;reference path=&amp;quot;../setup.ts&amp;quot; /&amp;gt;
+
+describe(&amp;quot;widgetManagerController&amp;quot;, function() {
+
+    var controllerName = &amp;quot;widgetManagerController&amp;quot;;
+
+    var app = &amp;lt;WidgetRegistryAppMock&amp;gt;{};    
+    var controller = &amp;lt;WidgetRegistryControllerMock&amp;gt;{};
+    var service = &amp;lt;WidgetServiceMock&amp;gt;{};
+
+    beforeEach(function() {
+        //    1.
+        app = startApplication();
+        controller = mockWidgetRegistryController();
+        service = mockWidgetService();
+    });
+
+    afterEach(function() {
+        //    4.
+        service.httpMock.verifyNoOutstandingExpectation();
+        service.httpMock.verifyNoOutstandingRequest();
+    });
+
+    it(&amp;quot;shows error if get all widgets operation fails&amp;quot;, function() {
+        //    2.
+        service.httpMock.expectGET(app.config.apiEndpoint + &amp;quot;all&amp;quot;).respond(500);
+        var scope = &amp;lt;WidgetRegistry.WidgetManagerScope&amp;gt;controller.rootScope.$new();
+
+        controller.factory(controllerName, {
+            appConfig: app.config,
+            $scope: scope,
+            widgetService: service.instance,
+            $modal: controller.modal
+        });
+
+        expect(scope.model).toBeDefined();
+        expect(scope.model.errorMessage).toBeFalsy();
+
+        expect(scope.model.operationInProgress).toBe(true);
+        service.httpMock.flush();
+
+        expect(scope.model.widgets).toEqual([]);
+        expect(scope.model.operationInProgress).toBe(false);
+        expect(scope.model.errorMessage).toBeTruthy();
+    });
+
+    it(&amp;quot;adds a new widget to list if operation completes successfully&amp;quot;, function() {
+        //    3.
+        var data = [
+            createFakeWidgetInstance(),
+            createFakeWidgetInstance(),
+            createFakeWidgetInstance()
+        ];
+        service.httpMock.expectGET(app.config.apiEndpoint + &amp;quot;all&amp;quot;).respond(200, data);
+
+        var scope = &amp;lt;WidgetRegistry.WidgetManagerScope&amp;gt;controller.rootScope.$new();
+        controller.factory(controllerName, {
+            appConfig: app.config,
+            $scope: scope,
+            widgetService: service.instance,
+            $modal: controller.modal
+        });
+        service.httpMock.flush();
+
+        var deferred = controller.promises.defer();        
+        spyOn(controller.modal, &amp;quot;open&amp;quot;).and.returnValue({ result: deferred.promise });
+
+        scope.addWidget();
+        deferred.resolve();
+
+        deferred.promise.finally(() =&amp;gt; {
+            expect(scope.model.widgets.length).toBe(data.length + 1);
+            expect(scope.model.errorMessage).toBeFalsy();
+        });    
+    });
+
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can execute these tests by running &lt;code&gt;gulp run-tests&lt;/code&gt;. Resulting test coverage data will be saved under &lt;code&gt;wwwroot\tests\coverage&lt;/code&gt;. &lt;/p&gt;
+&lt;p&gt;This is how the tests will run:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;[1] -&amp;gt; [2] -&amp;gt; [4], then [1] -&amp;gt; [3] -&amp;gt; [4]&lt;/li&gt;
+&lt;li&gt;[1] starts an application and gets access to &lt;code&gt;widgetManagerController&lt;/code&gt;‘s and &lt;code&gt;widgetService&lt;/code&gt;‘s dependencies.&lt;/li&gt;
+&lt;li&gt;[2]:&lt;ol&gt;
+&lt;li&gt;Configures service’s GET endpoint to return 500.&lt;/li&gt;
+&lt;li&gt;Creates new controller instance.&lt;/li&gt;
+&lt;li&gt;Ensures that no error is displayed and the overall initial state is what is expected.&lt;/li&gt;
+&lt;li&gt;Completes pending GET request by flushing HTTP mock.&lt;/li&gt;
+&lt;li&gt;Ensures the outcome of the error on initial GET operation.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;[3]:&lt;ol&gt;
+&lt;li&gt;Configures service’s GET endpoint to successfully return fake data.&lt;/li&gt;
+&lt;li&gt;Creates new controller instance and completes pending GET request by flushing HTTP mock.&lt;/li&gt;
+&lt;li&gt;Mocks &lt;code&gt;$modal.open()&lt;/code&gt; method by shortcutting it to a locally-controlled promise, so 
+no actual widget editor code is executed at all.&lt;/li&gt;
+&lt;li&gt;Simulates user’s click on Add Widget button by directly calling the button click handler.
+Note that there’s no HTML or DOM manipulation happening at this point.&lt;/li&gt;
+&lt;li&gt;Successfully resolves local promise.&lt;/li&gt;
+&lt;li&gt;On promise’s &lt;code&gt;finally&lt;/code&gt; clause ensures the outcome of the successful add operation.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;[4] is a code that will be automatically executed by the framework after [2] or [3] (actual unit test). In our case
+it’s a safeguard that ensures that we didn’t miss any possible call to any of HTTP endpoints our code might call.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/fafd0a98ebf2170156d22b1540a2310607dc40b4&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;improving-code-and-process&quot;&gt;Improving code and process&lt;/h2&gt;
+&lt;h3 id=&quot;caching-angular-templates&quot;&gt;Caching Angular templates&lt;/h3&gt;
+&lt;p&gt;As it is implemented now, you will notice that application downloads templates every time you access a feature for the first time. While 
+it is convenient during development, it’s a performance hit for a regular usage pattern. We can fix this by putting all templates into 
+the cache upfront and downloading all of them once.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Add following dependencies to &lt;code&gt;devDependencies&lt;/code&gt; in &lt;code&gt;package.json&lt;/code&gt;:&lt;pre&gt;&lt;code&gt; &amp;quot;gulp-angular-templatecache&amp;quot;: &amp;quot;1.7.0&amp;quot;,
+ &amp;quot;gulp-minify-html&amp;quot;: &amp;quot;1.0.4&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;Run &lt;code&gt;npm install&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Change &lt;code&gt;copy-templates&lt;/code&gt; task in your &lt;code&gt;gulpfile.js&lt;/code&gt; to be a bit more sophisticated:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;   var minifyHtml = require(&amp;quot;gulp-minify-html&amp;quot;),
+       templateCache = require(&amp;quot;gulp-angular-templatecache&amp;quot;);
+
+ gulp.task(&amp;quot;copy-templates&amp;quot;, function () {
+   gulp.src(templateFiles)
+     .pipe(minifyHtml())
+     .pipe(templateCache(&amp;quot;templates.js&amp;quot;, {
+       root: &amp;quot;/templates&amp;quot;,
+       module: &amp;quot;widgetRegistryData&amp;quot;                          //  Use data module, so app module would wait until templates are initialized.
+     }))
+     .pipe(gulp.dest(paths.appOut));
+ });
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;Include link to &lt;code&gt;templates.js&lt;/code&gt; in &lt;code&gt;Views\Home\Index.cshtml&lt;/code&gt;:&lt;pre&gt;&lt;code&gt; &amp;lt;script src=&amp;quot;~/app/templates.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+ &amp;lt;script src=&amp;quot;~/app/app.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;After running &lt;code&gt;gulp copy-templates&lt;/code&gt; and refreshing the page in the browser, you should see &lt;code&gt;templates.js&lt;/code&gt; to be downloaded and no more roundtrips to 
+the backend to fetch template files.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/50e31751d5cc682b5d7201b24dec49f5416b050e&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;styling-with-sass&quot;&gt;Styling with SASS&lt;/h3&gt;
+&lt;p&gt;So far we’ve been using TypeScript to boost our productivity while developing the application. We can improve our productivity even further by switching from
+developing styles in CSS to doing so &lt;a href=&quot;http://sass-lang.com/&quot;&gt;SASS&lt;/a&gt;. SASS offers very impressive way of maintaining and sharing styles without copying and pasting same CSS code all over
+the place.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Add a new entry in &lt;code&gt;devDependencies&lt;/code&gt; in &lt;code&gt;package.json&lt;/code&gt;:&lt;pre&gt;&lt;code&gt; &amp;quot;gulp-sass&amp;quot;: &amp;quot;2.0.4&amp;quot;,
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;Run &lt;code&gt;npm install&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add a new task to &lt;code&gt;gulpfile.js&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; var sass = require(&amp;quot;gulp-sass&amp;quot;);
+
+ var paths = {
+   ...
+   appStyles: &amp;quot;./styles/&amp;quot;,
+ };
+
+ paths.styleSources = paths.appStyles + &amp;quot;**/*.scss&amp;quot;;
+ paths.stylesOut = project.webroot + &amp;quot;/css/&amp;quot;;
+
+ gulp.task(&amp;quot;compile-styles&amp;quot;, function () {
+   gulp.src(styleSources)
+     .pipe(sourcemaps.init())
+     .pipe(sass({
+       includePaths: [],                                     //  Populate with paths to included files.
+       outputStyle: &amp;quot;compressed&amp;quot;
+     }))
+     .pipe(sourcemaps.write(&amp;quot;maps/&amp;quot;))                        //  Relative to stylesOut.
+     .pipe(gulp.dest(paths.stylesOut));
+ });
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Start by creating &lt;code&gt;styles\site.scss&lt;/code&gt; and running &lt;code&gt;gulp compile-styles&lt;/code&gt; command. You are all set to use SASS going forward.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/93f2d569a1640e552eb3a89caf2770489a31b9f2&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;one-build-task-to-rule-them-all&quot;&gt;One build task to rule them all&lt;/h3&gt;
+&lt;p&gt;So far we were creating disjointed tasks focused on very specific parts of development process. It’s very inconvenient to run these tasks one-by-one in a certain order
+every time we want to produce an application. It’s time to create uber-tasks that will orchestrate all our existing tasks the way we want it.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Add new dependencies to &lt;code&gt;package.json&lt;/code&gt; and run &lt;code&gt;npm install&lt;/code&gt;:&lt;pre&gt;&lt;code&gt; &amp;quot;gulp-start-process&amp;quot;: &amp;quot;1.1.1&amp;quot;,
+ &amp;quot;run-sequence&amp;quot;: &amp;quot;1.1.2&amp;quot;,
+ &amp;quot;del&amp;quot;: &amp;quot;1.2.1&amp;quot;,
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add new tasks to &lt;code&gt;gulpfile.js&lt;/code&gt;:
+   var del = require(“del”),&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;   start = require(&amp;quot;gulp-start-process&amp;quot;),
+   runSequence = require(&amp;quot;run-sequence&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt; //  gulp clean
+ gulp.task(&amp;quot;clean&amp;quot;, function (cb) {
+     del([paths.appOut, paths.testsOut, paths.templatesOut, paths.stylesOut], cb);
+ });
+
+ //  gulp build
+ gulp.task(&amp;quot;build&amp;quot;, function (cb) {
+     runSequence(&amp;quot;clean&amp;quot;, [&amp;quot;build-backend&amp;quot;, &amp;quot;build-app&amp;quot;], [&amp;quot;run-tests&amp;quot;, &amp;quot;run-tests-backend&amp;quot;]);
+ });
+
+ //  gulp run-tests
+ gulp.task(&amp;quot;run-tests&amp;quot;, [&amp;quot;build-tests&amp;quot;], function (done) {
+     runTests(done);
+ });
+
+ //  gulp run-tests-backend
+ gulp.task(&amp;quot;run-tests-backend&amp;quot;, function (cb) {
+     start(&amp;quot;dnx . test&amp;quot;, cb);
+ });
+
+ gulp.task(&amp;quot;build-app&amp;quot;, [&amp;quot;copy-templates&amp;quot;, &amp;quot;compile-styles&amp;quot;, &amp;quot;compile-app&amp;quot;], function () {
+ });
+
+ gulp.task(&amp;quot;build-backend&amp;quot;, function (cb) {
+     start(&amp;quot;dnu build&amp;quot;, cb);
+ });
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;After these changes you should be able to:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Run &lt;code&gt;gulp build&lt;/code&gt; in order to clean output folders, build both back- end frontend, tests, then run both front- and backend tests.&lt;/li&gt;
+&lt;li&gt;Run &lt;code&gt;gulp run-tests&lt;/code&gt; in order to rebuild and run frontend tests.&lt;/li&gt;
+&lt;li&gt;Run &lt;code&gt;gulp clean&lt;/code&gt; in order to only clean output folders. &lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/b8069d6f2482f166d02f844b9ce51afcd2e8f8bb&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Also make sure to remove rifraf from gulp requirements — I forgot to do that at this stage and &lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/94297f960c06df994c1c26ed43d74265c13e7339&quot;&gt;it was committed much later&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&quot;automatic-compilation-and-unit-testing&quot;&gt;Automatic compilation and unit testing&lt;/h3&gt;
+&lt;p&gt;We were able to greatly improve our code-run-fix cycle by carefully orchestrating our gulp tasks, but we can do better. We can instruct gulp to run in background
+and watch for file changes, then run build or tests for us.&lt;/p&gt;
+&lt;p&gt;Final additions to &lt;code&gt;gulpfile.js&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//  gulp watch-app
+gulp.task(&amp;quot;watch-app&amp;quot;, [&amp;quot;build-app&amp;quot;], function () {
+  gulp.watch(appSources, [&amp;quot;compile-app&amp;quot;]);
+  gulp.watch(styleSources, [&amp;quot;compile-styles&amp;quot;]);
+  gulp.watch(templateFiles, [&amp;quot;copy-templates&amp;quot;]);
+});
+
+//  gulp watch-tests
+gulp.task(&amp;quot;watch-tests&amp;quot;, [&amp;quot;run-tests&amp;quot;], function (done) {
+  gulp.watch(appSources, [&amp;quot;compile-app-run-tests&amp;quot;]);
+  gulp.watch(testSources, [&amp;quot;run-tests&amp;quot;]);
+});
+
+gulp.task(&amp;quot;compile-app-run-tests&amp;quot;, [&amp;quot;compile-app&amp;quot;], function (done) {
+  runTests(done);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can run &lt;code&gt;gulp watch-app&lt;/code&gt;, then return to your IDE, make changes in application source code, then refresh page in the browser and see your changes go
+live without you triggering the build manually. Ditto for frontend unit tests after running &lt;code&gt;gulp watch-tests&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;One caveat you should keep in mind: gulp will watch for only changes in existing files, not for addition of new files.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/8fdc7fa8f2b94c44f8b5732b50f9d0c989b015fe&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;minimizing-application-scripts&quot;&gt;Minimizing application scripts&lt;/h3&gt;
+&lt;p&gt;Right now our application is compiled down to a single JavaScript file that contains all code. We can still minify this file in order to
+save on load time and size.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Modify &lt;code&gt;min:js&lt;/code&gt; task in &lt;code&gt;gulpfile.js&lt;/code&gt; to look like this:&lt;pre&gt;&lt;code&gt; gulp.task(&amp;quot;min:js&amp;quot;, function() {
+     gulp.src([paths.appOut + &amp;quot;templates.js&amp;quot;, paths.appOut + &amp;quot;app.js&amp;quot;], { base: &amp;quot;.&amp;quot; })
+         .pipe(concat(paths.appOut + &amp;quot;app.min.js&amp;quot;))
+         .pipe(uglify())
+         .pipe(gulp.dest(&amp;quot;.&amp;quot;));
+ });
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Modify &lt;code&gt;Index.cshtml&lt;/code&gt; to include minified script:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; @section scripts 
+ {
+
+ &amp;lt;script type=&amp;quot;text/javascript&amp;quot;&amp;gt;
+
+     var appData = angular.module(&amp;quot;widgetRegistryData&amp;quot;, []);
+
+     var appConfig = {
+         apiEndpoint: &amp;quot;/api/widgets/&amp;quot;,
+         templateRoot: &amp;quot;/templates/&amp;quot;
+     };
+     appData.constant(&amp;quot;appConfig&amp;quot;, appConfig);
+
+ &amp;lt;/script&amp;gt;
+
+ &amp;lt;environment names=&amp;quot;Development&amp;quot;&amp;gt;
+     &amp;lt;script src=&amp;quot;~/js/templates.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+     &amp;lt;script src=&amp;quot;~/js/app.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+ &amp;lt;/environment&amp;gt;
+ &amp;lt;environment names=&amp;quot;Staging,Production&amp;quot;&amp;gt;
+     &amp;lt;script src=&amp;quot;~/js/app.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+ &amp;lt;/environment&amp;gt;
+
+ }
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;Exclude minified bundle from unit testing by adding a new exclusion to &lt;code&gt;karma.conf.js&lt;/code&gt;:&lt;pre&gt;&lt;code&gt; exclude: [
+   &amp;quot;./wwwroot/js/app.min.js&amp;quot;,
+   &amp;quot;./wwwroot/js/templates.js&amp;quot;,
+ ]
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Application will use unminified version during development and minified otherwise. Unit tests will run against unminified version, so the code coverage results would be
+useful for us.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/f1d3715672f594b916fb6b51565be76d6945bb7f&quot;&gt;This stage in repository&lt;/a&gt;
+See also &lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/7381c7b98a613de0a2f9abf619292fdb21d8a905&quot;&gt;this commit&lt;/a&gt; — I missed the issue with unit tests.&lt;/p&gt;
+&lt;h3 id=&quot;simulating-different-environments&quot;&gt;Simulating different environments&lt;/h3&gt;
+&lt;p&gt;If you look into &lt;code&gt;Views\Shared\_Layout.cshtml&lt;/code&gt; file, you’ll notice that some of the scripts are being included conditionally on the type of the environment — Development,
+Staging or Production. In order to simulate different environment during development, modify commands in your &lt;code&gt;project.json&lt;/code&gt; file as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;  &amp;quot;commands&amp;quot;: {
+    &amp;quot;kestrel&amp;quot;: &amp;quot;Microsoft.AspNet.Hosting --server Kestrel --config hosting.ini /ASPNET_ENV=Production&amp;quot;,
+    &amp;quot;kestrel-dev&amp;quot;: &amp;quot;Microsoft.AspNet.Hosting --server Kestrel --config hosting.ini /ASPNET_ENV=Development&amp;quot;,
+    &amp;quot;web&amp;quot;: &amp;quot;Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --config hosting.ini /ASPNET_ENV=Production&amp;quot;,
+    &amp;quot;web-dev&amp;quot;: &amp;quot;Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --config hosting.ini /ASPNET_ENV=Development&amp;quot;
+  }
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now, depending on which command you select, the application will change its behaviors accordingly.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/19624c7cbc9da604149c36dae6081207b3ddf5b8&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;keyboard-shortcuts&quot;&gt;Keyboard shortcuts&lt;/h3&gt;
+&lt;p&gt;One last change we could make to improve our workflow is to assign &lt;code&gt;watch-app&lt;/code&gt; and &lt;code&gt;watch-tests&lt;/code&gt; to a keyboard shortcut.&lt;/p&gt;
+&lt;p&gt;Assuming you didn’t configure keyboard shortcuts for the project yet, while in IDE press &lt;code&gt;Ctrl-Shift-T&lt;/code&gt; and choose to edit &lt;code&gt;tasks.json&lt;/code&gt; file when prompted. Add
+following configuration to the file and you’re good to go.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+    &amp;quot;version&amp;quot;: &amp;quot;0.1.0&amp;quot;,
+    &amp;quot;command&amp;quot;: &amp;quot;gulp&amp;quot;,
+    &amp;quot;args&amp;quot;: [
+        &amp;quot;--gulpfile&amp;quot;, 
+        &amp;quot;gulpfile.js&amp;quot;
+    ],
+    &amp;quot;isShellCommand&amp;quot;: true,
+    &amp;quot;tasks&amp;quot;: [
+        {
+            &amp;quot;taskName&amp;quot;: &amp;quot;watch-app&amp;quot;,
+            // Make this the default build command.
+            &amp;quot;isBuildCommand&amp;quot;: true,
+            // Show the output window only if unrecognized errors occur.
+            &amp;quot;showOutput&amp;quot;: &amp;quot;silent&amp;quot;,
+            // Task is running in watching mode.
+            &amp;quot;isWatching&amp;quot;: true,
+            // Use the standard less compilation problem matcher.
+            &amp;quot;problemMatcher&amp;quot;: [&amp;quot;$gulp-tsc&amp;quot;, &amp;quot;$tsc&amp;quot;]
+        },
+        {
+            &amp;quot;taskName&amp;quot;: &amp;quot;watch-tests&amp;quot;,
+            // Make this the default test command.
+            &amp;quot;isTestCommand&amp;quot;: true,
+            // Show the output window only if unrecognized errors occur.
+            &amp;quot;showOutput&amp;quot;: &amp;quot;silent&amp;quot;,
+            // Task is running in watching mode.
+            &amp;quot;isWatching&amp;quot;: true,
+            // Use the standard less compilation problem matcher.
+            &amp;quot;problemMatcher&amp;quot;: [&amp;quot;$gulp-tsc&amp;quot;, &amp;quot;$tsc&amp;quot;]
+        }
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;After making this change &lt;code&gt;Ctrl-Shift-B&lt;/code&gt; will start continuous application compilation; &lt;code&gt;Ctrl-Shift-T&lt;/code&gt; will both compile an app and run unit tests.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/wasker/0-to-code-sample/tree/3138f80a10554592afadd1daa6ea10eaf9284dbb&quot;&gt;This stage in repository&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;the-end&quot;&gt;The end&lt;/h2&gt;
+&lt;p&gt;Development with Visual Studio Code is different and requires some time to get in. With this article you should get a good starting point for your future endeavors.&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>0-to-code</title>
       <link>http://localhost:8080/articles/2015-06-01-0-to-code/</link>
