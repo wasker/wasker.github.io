@@ -131,8 +131,8 @@ debugging easier.
 	                    }));  
 	
 	  return tscResult.js
-	          .pipe(sourcemaps.write("maps/"))                  //  Relative to paths.js.
-	          .pipe(gulp.dest(paths.js));
+	          .pipe(sourcemaps.write("maps/"))                  //  Relative to appOut.
+	          .pipe(gulp.dest(paths.appOut));
 	});
 	```
   5. Create ```scripts\app.ts```:

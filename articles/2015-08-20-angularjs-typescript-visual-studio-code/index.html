@@ -134,8 +134,8 @@ var tscResult = gulp.src([paths.appSources, paths.typings + &quot;**/*.d.ts&quot
                   }));  
 
 return tscResult.js
-        .pipe(sourcemaps.write(&quot;maps/&quot;))                  //  Relative to paths.js.
-        .pipe(gulp.dest(paths.js));
+        .pipe(sourcemaps.write(&quot;maps/&quot;))                  //  Relative to appOut.
+        .pipe(gulp.dest(paths.appOut));
 });
 </code></pre></li>
 <li>Create <code>scripts\app.ts</code>:<pre><code>let hello = &quot;world&quot;;
