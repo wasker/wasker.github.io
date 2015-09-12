@@ -304,7 +304,7 @@ One final step is to actually bootstrap our application. Modify ```Views\Home\In
 
 </script>
 
-<script src="~/app/app.js"></script>
+<script src="~/js/app.js"></script>
 
 }
 
