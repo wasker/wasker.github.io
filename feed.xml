@@ -5,9 +5,22 @@
     <atom:link href="http://localhost:8080/feed.xml" rel="self" type="application/rss+xml"></atom:link>
     <link>http://localhost:8080</link>
     <description></description>
-    <pubDate>Thu, 20  Aug 2015 10:00:00 -0700</pubDate>
+    <pubDate>Tue, 12 Jan 2016 10:28:00 -0800</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
+    <item>
+      <title>MakeAppx error 0x80080204 - The specified package format is not valid - The package manifest is not valid.</title>
+      <link>http://localhost:8080/articles/2016-01-12-universal-windows-apps-uwp-package-manifest-not-valid/</link>
+      <pubDate>Tue, 12 Jan 2016 10:28:00 -0800</pubDate>
+      <guid isPermaLink="true">http://localhost:8080/articles/2016-01-12-universal-windows-apps-uwp-package-manifest-not-valid/</guid>
+      <author></author>
+      <description>&lt;p&gt;MakeAppx : error : 0x80080204 - The specified package format is not valid: The package manifest is not valid.&lt;/p&gt;
+&lt;p&gt;Symptoms: can create x86/x64 bundle and ARM bundle separately, but x86/x64/ARM bundle fails with the MakeAppx error 0x80080204.&lt;/p&gt;
+&lt;p&gt;Package.appxmanifest declares &lt;Resource Language=&quot;x-generate&quot; /&gt;.&lt;/p&gt;
+&lt;p&gt;Upon inspection, AppxManifest.xml in x86/x64 bundle would contain &lt;Resource Language=&quot;EN-US&quot;/&gt; and &lt;Resource Language=&quot;EN&quot;/&gt;, while ARM bundle will have only &lt;Resource Language=&quot;EN-US&quot;/&gt;.&lt;/p&gt;
+&lt;p&gt;Root-caused the problem to the missing/mismatched neutral culture assembly attribute. The fix is simple: go over all projects in the solution, right click, Properties, then go to the Build tab and use Assembly Info dialog to set neutral culture to the same value for all.&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>Building AngularJS application with TypeScript and Visual Studio Code</title>
       <link>http://localhost:8080/articles/2015-08-20-angularjs-typescript-visual-studio-code/</link>
@@ -128,8 +141,8 @@ var tscResult = gulp.src([paths.appSources, paths.typings + &amp;quot;**/*.d.ts&
                   }));  
 
 return tscResult.js
-        .pipe(sourcemaps.write(&amp;quot;maps/&amp;quot;))                  //  Relative to paths.js.
-        .pipe(gulp.dest(paths.js));
+        .pipe(sourcemaps.write(&amp;quot;maps/&amp;quot;))                  //  Relative to appOut.
+        .pipe(gulp.dest(paths.appOut));
 });
 &lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;li&gt;Create &lt;code&gt;scripts\app.ts&lt;/code&gt;:&lt;pre&gt;&lt;code&gt;let hello = &amp;quot;world&amp;quot;;
@@ -281,7 +294,7 @@ to have its definitions visible in other places.&lt;/p&gt;
 
 &amp;lt;/script&amp;gt;
 
-&amp;lt;script src=&amp;quot;~/app/app.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+&amp;lt;script src=&amp;quot;~/js/app.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
 
 }
 

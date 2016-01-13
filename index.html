@@ -22,6 +22,19 @@
       <div class="content-wrap">
         <article class="article intro">
           <header>
+            <p class="date"><span>12. January 2016</span></p>
+            <h2><a href="/articles/2016-01-12-universal-windows-apps-uwp-package-manifest-not-valid/">MakeAppx error 0x80080204 - The specified package format is not valid - The package manifest is not valid.</a></h2>
+          </header>
+          <section class="content"><p>MakeAppx : error : 0x80080204 - The specified package format is not valid: The package manifest is not&nbsp;valid.</p>
+<p>Symptoms: can create x86/x64 bundle and <span class="caps">ARM</span> bundle separately, but x86/x64/ARM bundle fails with the MakeAppx error&nbsp;0x80080204.</p>
+<p>Package.appxmanifest declares <Resource Language="x-generate" />.</p>
+<p>Upon inspection, AppxManifest.xml in x86/x64 bundle would contain <Resource Language="EN-US"/> and <Resource Language="EN"/>, while <span class="caps">ARM</span> bundle will have only <Resource Language="EN-US"/>.</p>
+<p>Root-caused the problem to the missing/mismatched neutral culture assembly attribute. The fix is simple: go over all projects in the solution, right click, Properties, then go to the Build tab and use Assembly Info dialog to set neutral culture to the same value for&nbsp;all.</p>
+
+          </section>
+        </article>
+        <article class="article intro">
+          <header>
             <p class="date"><span>20. August 2015</span></p>
             <h2><a href="/articles/2015-08-20-angularjs-typescript-visual-studio-code/">Building AngularJS application with TypeScript and Visual Studio Code</a></h2>
           </header>
@@ -49,17 +62,6 @@ Visual Studio Code itself. The script assumes that you don’t have any tools ha
 
           </section>
         </article>
-        <article class="article intro">
-          <header>
-            <p class="date"><span>18. June 2011</span></p>
-            <h2><a href="/articles/2011-06-17-bluray-windows-media-player/">Making Blu-ray discs playing with Windows Media Center on Windows 7</a></h2>
-          </header>
-          <section class="content"><p>So, I jumped the shark and bought Samsung <span class="caps">SH</span>-B123L drive. Drive comes with CyberLink PowerDVD9 freebie and that’s seems to be the only way to play Blu-ray discs on Windows 7, as there’s no built-in codec yet. The thing is that I fancy Windows Media Center and I really dislike flashy UI of CyberLink. Thankfully, CyberLink provides WMC plug-in which to some extent behaves like original DVD player in WMC, although not without annoyances. One of the major annoyances is that PowerDVD registers itself as regular DVD player as well and Media Center prompts you to choose between regular DVD player and CyberLink DVD player every time you want to play DVD in WMC. Another problem is that even though Blu-ray autoplay section is being created in Control Panel’s AutoPlay Center, there’s no way to select Windows Media Player to handle&nbsp;Blu-rays.</p>
-<p>Here’s two steps that you need to do in order to make everybody play nicely&nbsp;together…</p>
-<p>
-            <p class="more"><a href="/articles/2011-06-17-bluray-windows-media-player/">more</a></p>
-          </section>
-        </article>
       </div>
     </div>
     <footer>
@@ -67,7 +69,7 @@ Visual Studio Code itself. The script assumes that you don’t have any tools ha
         <div class="nav"><a href="/page/2/">« Older</a><a href="/archive.html">Archives</a>
         </div>
         <section class="copy">
-          <p>&copy; 2015 wasker &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          <p>&copy; 2016 wasker &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
           </p>
         </section>
       </div>
