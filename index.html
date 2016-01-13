@@ -27,8 +27,8 @@
           </header>
           <section class="content"><p>MakeAppx : error : 0x80080204 - The specified package format is not valid: The package manifest is not&nbsp;valid.</p>
 <p>Symptoms: can create x86/x64 bundle and <span class="caps">ARM</span> bundle separately, but x86/x64/ARM bundle fails with the MakeAppx error&nbsp;0x80080204.</p>
-<p>Package.appxmanifest declares <Resource Language="x-generate" />.</p>
-<p>Upon inspection, AppxManifest.xml in x86/x64 bundle would contain <Resource Language="EN-US"/> and <Resource Language="EN"/>, while <span class="caps">ARM</span> bundle will have only <Resource Language="EN-US"/>.</p>
+<p>Package.appxmanifest declares &lt;Resource Language=”x-generate”&nbsp;/&gt;.</p>
+<p>Upon inspection, AppxManifest.xml in x86/x64 bundle would contain &lt;Resource Language=”<span class="caps">EN</span>-US”/&gt; and &lt;Resource Language=”EN”/&gt;, while ARM bundle will have only &lt;Resource&nbsp;Language=”EN-US”/&gt;.</p>
 <p>Root-caused the problem to the missing/mismatched neutral culture assembly attribute. The fix is simple: go over all projects in the solution, right click, Properties, then go to the Build tab and use Assembly Info dialog to set neutral culture to the same value for&nbsp;all.</p>
 
           </section>
